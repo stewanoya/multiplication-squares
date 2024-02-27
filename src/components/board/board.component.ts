@@ -6,41 +6,32 @@ import { SegmentComponent } from '../segment/segment.component';
 import { LineSegment } from '../../models/line-segment.model';
 import { SegmentOrientation } from '../../models/consts.model';
 import { PlayerService } from '../../services/player.service';
+import { DiceComponent } from '../dice/dice.component';
+
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'board',
   standalone: true,
-  imports: [CommonModule, SegmentComponent],
+  imports: [CommonModule, SegmentComponent, DiceComponent, MatSnackBarModule],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
 
   game: BoardModel;
+  maxValue: number = 6;
 
-  constructor(private _players: PlayerService) {
+  constructor(private _players: PlayerService,
+    private _snackbar: MatSnackBar) {
     this.game = new BoardModel(6, _players.createDummyPlayers());
   }
 
-  // onBottomSegmentClick(cell: NumberCellModel) {
-  //   console.log("bottom clicked", cell);
-  // }
-
-  // onTopSegmentClick(cell: NumberCellModel) {
-  //   console.log("top clicked", cell);
-  // }
-
-  // onLeftSegmentClick(cell: NumberCellModel) {
-  //   console.log("left clicked", cell);
-  // }
-
-  // onRightSegmentClick(cell: NumberCellModel) {
-  //   console.log("right clicked", cell);
-  // }
-
-  getNeighbourCells(row: NumberCellModel[], rowIndex: number, cell: NumberCellModel, orientation: SegmentOrientation, firstRow?: boolean): NumberCellModel[] {
+  getNeighbourCells(row: NumberCellModel[], rowIndex: number, cell: NumberCellModel, orientation: SegmentOrientation, firstInstance?: boolean): NumberCellModel[] {
     if (orientation === 'vert') {
-      if (cell.index === 0) {
+      if (cell.index === 0 && firstInstance) {
         return [cell];
       }
 
@@ -52,7 +43,7 @@ export class BoardComponent {
    }
 
    if (orientation === 'horiz') {
-    if (rowIndex === 0 && !firstRow) {
+    if (rowIndex === 0 && firstInstance) {
       return [cell];
     }
 
@@ -66,7 +57,29 @@ export class BoardComponent {
    return [];
   }
 
+  cellsMatchProduct(cells: NumberCellModel[]): boolean {
+    return cells.some(i => i.value === this.game.product);
+  }
+
+  showSnack(msg: string) {
+    this._snackbar.open(msg, "Dismiss", {duration: 5000});
+  }
+
   onSegmentSelected(segment: LineSegment, row: NumberCellModel[], rowIndex: number) {
+    if (!this.cellsMatchProduct(segment.borderingCells)) {
+      if (this.game.product === -1) {
+        this.showSnack("Roll the dice first!");
+      } else if (this.game.product === 0) {
+        this.showSnack("You already took your turn, the next player should roll the dice!");
+      } else {
+        this.showSnack(`Sorry, ${this.game.die1Value} x ${this.game.die2Value} does not equal ${segment.borderingCells.map(i => i.value).join(", or ")}`)
+      }
+      return;
+    }
+
+    if (segment.isSelected) {
+      return;
+    }
     segment.isSelected = true;
     segment.fillColor = this.game.currentPlayerTurn.color;
 
@@ -96,17 +109,26 @@ export class BoardComponent {
       }
     }
 
+    this.resetProduct();
     this.checkIfAnyCellsAreComplete(segment.borderingCells);
-    this.game.nextTurn();
+  }
+
+  resetProduct() {
+    this.game.updateProduct(0, 0);
   }
 
   checkIfAnyCellsAreComplete(cells: NumberCellModel[]) {
+    console.log("cells", cells);
     for (const cell of cells) {
       if (cell.allSidesSelected) {
         cell.fillColor = this.game.currentPlayerTurn.color;
         this.game.updateScore();
       }
     }
+  }
+
+  onDiceValueUpdate(nums: number[]) {
+    this.game.updateProduct(nums[0], nums[1]);
   }
 
 }

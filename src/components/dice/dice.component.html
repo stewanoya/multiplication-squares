@@ -1,0 +1,11 @@
+<div *ngIf="firstDie && secondDie" style="display: flex; justify-content: center; align-items: center; gap: 1rem; padding: 3rem; width: fit-content">
+  <div class="die" style="width: 4rem; height: 4rem; background-color: lightblue;">
+    <h1>{{ firstDie.rolling$ | async }}</h1>
+  </div>
+  <h1>x</h1>
+  <div class="die" style="width: 4rem; height: 4rem; background-color: lightblue;">
+    <h1>{{ secondDie.rolling$ | async }}</h1>
+  </div>
+  <button (click)="onRollClick()">Roll</button>
+</div>
+

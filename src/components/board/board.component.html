@@ -18,7 +18,7 @@
       (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
       [orientation]="'vert'"
       [firstCell]="true"
-      [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert')"/>
+      [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert', true)"/>
     <line-segment
       (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
       [orientation]="'vert'"
@@ -26,6 +26,8 @@
     <div style="height: 100%; display: flex; justify-content: center; align-items: center;">{{ cell.value }}</div>
   </div>
 </div>
+
+<dice [maxValue]="maxValue" [game]="game" (diceValuesEvent)="onDiceValueUpdate($event)" />
 
 <h3>Scores:</h3>
 <p [style.color]="player.color" *ngFor="let player of game.players">

@@ -4,6 +4,9 @@ import { PlayerModel } from "./player.model";
 export class BoardModel {
   currentBoard: NumberCellModel[][] = [];
   flatMultiplicationValues: number[] = [];
+  product: number = -1;
+  die1Value: number = 0;
+  die2Value: number = 0;
   currentPlayerTurn: PlayerModel;
   players: PlayerModel[] = [];
   //10x10 board
@@ -53,6 +56,12 @@ export class BoardModel {
     } else {
       this.currentPlayerTurn = this.players[index + 1];
     }
+  }
+
+  updateProduct(num1: number, num2: number) {
+    this.die1Value = num1;
+    this.die2Value = num2;
+    this.product = num1 * num2;
   }
 
 }
