@@ -1,0 +1,33 @@
+<h1>Current Turn:</h1>
+<p [style.color]="game.currentPlayerTurn.color">{{ game.currentPlayerTurn.name }}</p>
+
+<div *ngFor="let row of game.currentBoard; let rowIndex = index;" style="display: grid; grid-template-columns: 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem;">
+  <div [style.background-color]="cell.fillColor" style="position: relative; text-align: center; height: 3rem" *ngFor="let cell of row;">
+    <line-segment
+      *ngIf="rowIndex === 0"
+      (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
+      [orientation]="'horiz'"
+      [firstRow]="true"
+      [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'horiz', true)"/>
+    <line-segment
+      (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
+      [orientation]="'horiz'"
+      [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'horiz')"/>
+    <line-segment
+      *ngIf="cell.index === 0"
+      (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
+      [orientation]="'vert'"
+      [firstCell]="true"
+      [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert')"/>
+    <line-segment
+      (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
+      [orientation]="'vert'"
+      [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert')"/>
+    <div style="height: 100%; display: flex; justify-content: center; align-items: center;">{{ cell.value }}</div>
+  </div>
+</div>
+
+<h3>Scores:</h3>
+<p [style.color]="player.color" *ngFor="let player of game.players">
+  {{player.name}} <span style="color: black;">- {{player.score}}</span>
+</p>

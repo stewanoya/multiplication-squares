@@ -1,0 +1,50 @@
+.line-segment {
+  position: absolute;
+  height: 0.25rem;
+  width: 100%;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.line-segment::before {
+  content: '';
+  position: absolute;
+  left: 96%;
+  border-radius: 100%;
+  background-color: rgb(11, 7, 37);;
+  width: 0.25rem;
+  height: 0.25rem;
+  z-index: 99;
+}
+
+.line-segment::after {
+  content: '';
+  position: absolute;
+  right: 96%;
+  border-radius: 100%;
+  background-color: rgb(11, 7, 37);
+  width: 0.25rem;
+  height: 0.25rem;
+  z-index: 99;
+}
+
+.line-segment:hover {
+  background-color: rgb(148, 148, 148);
+}
+
+.vert-line-segment {
+  left: 50%;
+  transform: rotate(90deg);
+  top: 50%;
+}
+
+.horiz-line-segment {
+  top: 100%;
+}
+
+.first-cell-line-segment {
+  top: 50%;
+  right: 50%;
+  transform: rotate(90deg);
+}
+

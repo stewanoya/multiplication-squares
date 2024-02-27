@@ -1,0 +1,13 @@
+<div
+  *ngIf="segment"
+  (click)="onSegmentClick()"
+  class="line-segment"
+  [style.background-color]="segment.fillColor"
+  [ngClass]="{
+    'vert-line-segment': !firstCell && segment.orientation === 'vert',
+    'horiz-line-segment': !firstRow && segment.orientation === 'horiz',
+    'first-row-line-segment': firstRow,
+    'first-cell-line-segment': firstCell,
+    }"
+>
+</div>
