@@ -8,7 +8,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { Colors } from '../../../models/consts.model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
 @Component({
   selector: 'app-new-game-form',
   standalone: true,
@@ -20,13 +21,17 @@ import { MatDialogRef } from '@angular/material/dialog';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule,
   ],
   templateUrl: './new-game-form.component.html',
   styleUrl: './new-game-form.component.scss'
 })
 export class NewGameFormComponent  {
-  constructor(private _fb: FormBuilder, private _snackbar: MatSnackBar, private _dialogRef: MatDialogRef<NewGameFormComponent>) {}
+  constructor(private _fb: FormBuilder,
+    private _snackbar: MatSnackBar,
+    private _dialogRef: MatDialogRef<NewGameFormComponent>,
+    private _dialog: MatDialog) {}
 
   playerGroups: FormGroup[] = this.createPlayers();
   Colors = Colors;
@@ -46,6 +51,14 @@ export class NewGameFormComponent  {
     } else {
       return false;
     }
+  }
+
+  onHowToPlayClick() {
+    this._dialog.open(HowToPlayComponent, {
+      width: "80%",
+      height: "80%",
+    })
+
   }
 
   onGameStartClick() {

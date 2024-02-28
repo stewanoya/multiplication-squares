@@ -1,0 +1,18 @@
+<div style="padding: 1rem;">
+
+  <h1>How to play</h1>
+  <mat-divider></mat-divider>
+  <ol type="1">
+    <li>Write your names and pick a color for each player</li>
+    <li>Roll the dice</li>
+    <li>Pick a side of a number that equals the first die multiplied by the second die. For example: if you roll 3 and 2, you can draw a line beside any 6 square, since 3 x 2 = 6</li>
+    <li>If you draw the line that creates a square around a number, that number is filled in with your color, and you score a point.</li>
+    <li>If the number you're looking for isn't available, you have to skip your turn.</li>
+    <li>Play until there are no options left for any players. Highest score wins!</li>
+    <li>If you want to play again, simply reset the game.</li>
+  </ol>
+
+  <div style="display: flex; justify-content: center;">
+    <button mat-flat-button color="primary" (click)="dialogRef.close()">Got it, lets play!</button>
+  </div>
+</div>

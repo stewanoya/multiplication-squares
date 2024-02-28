@@ -165,7 +165,9 @@ export class BoardComponent implements OnInit {
     const ref = this._dialog.open(ConfirmChoicePopupComponent, {
       data: {
         message: "Skip turn?"
-      }
+      },
+      width: "50%",
+      maxWidth: "20rem"
     })
 
     ref.afterClosed().subscribe((confirmed) => {
@@ -177,12 +179,14 @@ export class BoardComponent implements OnInit {
 
   skipTurn() {
     this.game?.nextTurn();
+    this.diceRolled = false;
     this.resetProduct();
   }
 
   onResetGame() {
     const ref = this._dialog.open(ConfirmChoicePopupComponent, {
-      width: "60%",
+      width: "50%",
+      maxWidth: "20rem",
       data: {
         message: "Reset Game?"
       }

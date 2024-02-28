@@ -32,7 +32,20 @@
   </mat-form-field>
 
 
-  <div style="display: flex; justify-content: center;">
-    <button style="margin: 0 auto;" mat-button (click)="onGameStartClick()" color="primary">Start game</button>
+  <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; flex-direction: column;">
+    <button
+      style="font-size: 1.75rem; padding: 1rem;"
+      mat-button
+      (click)="onGameStartClick()"
+      color="primary">
+        Start game
+    </button>
+    <button
+      style="font-size: 1.75rem; padding: 1rem;"
+      mat-button
+      (click)="onHowToPlayClick()"
+      color="accent">
+        How to play
+    </button>
   </div>
 </div>
