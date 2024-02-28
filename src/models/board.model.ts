@@ -5,6 +5,7 @@ export class BoardModel {
   currentBoard: NumberCellModel[][] = [];
   flatMultiplicationValues: number[] = [];
   product: number = -1;
+  maxValue: number
   die1Value: number = 0;
   die2Value: number = 0;
   currentPlayerTurn: PlayerModel;
@@ -14,6 +15,7 @@ export class BoardModel {
   //
 
   constructor(maxTable: number, players: PlayerModel[]) {
+    this.maxValue = maxTable;
     this.players = players;
     this.currentPlayerTurn = players[0];
     this.flatMultiplicationValues = this.generateMultipicationTableValues(maxTable);

@@ -1,0 +1,8 @@
+<div style="padding: 1rem">
+  <h3 style="font-size: 2rem;">{{data.message}}</h3>
+  <mat-divider></mat-divider>
+  <div style="display: flex; justify-content: space-between;">
+    <button mat-button color="primary" (click)="dialogRef.close(true)">Yes</button>
+    <button mat-button color="accent" (click)="dialogRef.close()">No</button>
+  </div>
+</div>

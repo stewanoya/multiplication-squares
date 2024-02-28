@@ -1,0 +1,106 @@
+
+$cell-size: 7.5rem;
+$small-screen-cell-size: 4rem;
+
+.board-row {
+  display: grid;
+  grid-template-columns: $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size;
+  overflow: visible;
+}
+
+.game__container {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem;
+}
+
+.info-section__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  padding-right: 2rem;
+}
+
+.board__container {
+  padding: 2rem;
+}
+
+.cell {
+  position: relative;
+  text-align: center;
+  height: $cell-size;
+}
+
+.dot {
+  height: 12px;
+  width: 12px;
+  border-radius: 100%;
+  background: rgb(7, 2, 29);
+  position: absolute;
+  z-index: 10;
+}
+
+.current-turn {
+  font-size: 2rem;
+}
+
+.cell-value {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.75rem;
+}
+
+p {
+  font-size: 1.5rem;
+}
+
+.lefttop {
+  top: -5px;
+  left: -5px;
+}
+
+.leftbottom {
+  bottom: -5px;
+  left: -5px;
+}
+
+.righttop {
+  right: -5px;
+  top: -5px;
+}
+
+.rightbottom {
+  right: -5px;
+  bottom: -5px;
+}
+
+@media (max-width: 850px) {
+  .game__container {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .board__container {
+    margin: 0 auto;
+  }
+
+  .current-turn__container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .board-row {
+    grid-template-columns: $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size;
+  }
+  .info-section__container {
+    padding-right: 0;
+  }
+
+  .cell {
+    height: $small-screen-cell-size;
+  }
+}

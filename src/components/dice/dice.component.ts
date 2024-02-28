@@ -3,18 +3,21 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BoardModel } from '../../models/board.model';
 import { DieModel } from '../../models/die.model';
 import { Observable, combineLatest, combineLatestWith, first, firstValueFrom, last, lastValueFrom, scan } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'dice',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule],
   templateUrl: './dice.component.html',
   styleUrl: './dice.component.scss'
 })
 export class DiceComponent implements OnInit {
   @Input() game: BoardModel | undefined;
-  @Input() maxValue: number | undefined;
   @Output() diceValuesEvent = new EventEmitter<number[]>();
+  @Output() diceRolledEvent = new EventEmitter();
+  @Output() skipTurnEvent = new EventEmitter();
+  @Input() diceRolled: boolean = false;
   firstDie: DieModel | undefined;
   secondDie: DieModel | undefined;
 
@@ -22,8 +25,8 @@ export class DiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.firstDie = new DieModel(this.maxValue as number)
-    this.secondDie = new DieModel(this.maxValue as number);
+    this.firstDie = new DieModel(this.game!.maxValue as number)
+    this.secondDie = new DieModel(this.game!.maxValue as number);
     this.firstDie?.value
       .pipe(combineLatestWith(this.secondDie!.value))
       .subscribe((vals) => {
@@ -31,8 +34,13 @@ export class DiceComponent implements OnInit {
     })
   }
 
+  onSkipTurnClick() {
+    this.skipTurnEvent.emit();
+  }
+
  async onRollClick() {
-    this.firstDie!.start$.next(this.maxValue);
-    this.secondDie!.start$.next(this.maxValue);
+    this.firstDie!.start$.next(this.game!.maxValue);
+    this.secondDie!.start$.next(this.game!.maxValue);
+    this.diceRolledEvent.emit();
   }
 }

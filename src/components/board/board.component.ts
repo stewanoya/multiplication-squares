@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BoardModel } from '../../models/board.model';
 import { CommonModule } from '@angular/common';
 import { NumberCellModel } from '../../models/number-cell.model';
@@ -9,25 +9,55 @@ import { PlayerService } from '../../services/player.service';
 import { DiceComponent } from '../dice/dice.component';
 
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { NewGameFormComponent } from './new-game-form/new-game-form.component';
+import { MatCardModule } from '@angular/material/card'
+import { MessageDialogComponent } from './message-dialog/message-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
+import { ConfirmChoicePopupComponent } from './confirm-choice-popup/confirm-choice-popup.component';
 @Component({
   selector: 'board',
   standalone: true,
-  imports: [CommonModule, SegmentComponent, DiceComponent, MatSnackBarModule],
+  imports: [
+    CommonModule,
+    SegmentComponent,
+    DiceComponent,
+    MatSnackBarModule,
+    MatDialogModule,
+    MatCardModule,
+    MatButtonModule
+  ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
-export class BoardComponent {
+export class BoardComponent implements OnInit {
 
-  game: BoardModel;
-  maxValue: number = 6;
+  game: BoardModel | undefined;
+  diceRolled = false;
 
-  constructor(private _players: PlayerService,
-    private _snackbar: MatSnackBar) {
-    this.game = new BoardModel(6, _players.createDummyPlayers());
+  constructor(
+    private _snackbar: MatSnackBar,
+    private _dialog: MatDialog,
+    private _players: PlayerService) {
   }
+
+  ngOnInit(): void {
+    const ref = this._dialog.open(NewGameFormComponent, {
+      disableClose: true,
+      width: '90%',
+      height: '90%'
+    })
+
+    ref.afterClosed().subscribe((gameSettings) => {
+      if (gameSettings) {
+        this.game = new BoardModel(gameSettings.max, gameSettings.players);
+      }
+    })
+
+    // this.game = new BoardModel(6, this._players.createDummyPlayers());
+  }
+
+
 
   getNeighbourCells(row: NumberCellModel[], rowIndex: number, cell: NumberCellModel, orientation: SegmentOrientation, firstInstance?: boolean): NumberCellModel[] {
     if (orientation === 'vert') {
@@ -47,18 +77,18 @@ export class BoardComponent {
       return [cell];
     }
 
-    if (rowIndex === this.game.currentBoard.length - 1) {
+    if (rowIndex === this.game!.currentBoard.length - 1) {
       return [cell];
     }
 
-    return [cell, this.game.currentBoard[rowIndex + 1][cell.index]].sort((a,b) => a.row - b.row);
+    return [cell, this.game!.currentBoard[rowIndex + 1][cell.index]].sort((a,b) => a.row - b.row);
    }
 
    return [];
   }
 
   cellsMatchProduct(cells: NumberCellModel[]): boolean {
-    return cells.some(i => i.value === this.game.product);
+    return cells.some(i => i.value === this.game!.product);
   }
 
   showSnack(msg: string) {
@@ -67,12 +97,10 @@ export class BoardComponent {
 
   onSegmentSelected(segment: LineSegment, row: NumberCellModel[], rowIndex: number) {
     if (!this.cellsMatchProduct(segment.borderingCells)) {
-      if (this.game.product === -1) {
-        this.showSnack("Roll the dice first!");
-      } else if (this.game.product === 0) {
-        this.showSnack("You already took your turn, the next player should roll the dice!");
+      if (this.game!.product === -1) {
+        this._dialog.open(MessageDialogComponent, {data: {message: "Roll the dice first!"}});
       } else {
-        this.showSnack(`Sorry, ${this.game.die1Value} x ${this.game.die2Value} does not equal ${segment.borderingCells.map(i => i.value).join(", or ")}`)
+        this._dialog.open(MessageDialogComponent, {data: {message: `Sorry, ${this.game!.die1Value} x ${this.game!.die2Value} does not equal ${segment.borderingCells.map(i => i.value).join(", or ")}`}});
       }
       return;
     }
@@ -81,7 +109,7 @@ export class BoardComponent {
       return;
     }
     segment.isSelected = true;
-    segment.fillColor = this.game.currentPlayerTurn.color;
+    segment.fillColor = this.game!.currentPlayerTurn.color;
 
     if (segment.orientation === 'vert') {
       if (segment.borderingCells.length === 1) {
@@ -111,24 +139,69 @@ export class BoardComponent {
 
     this.resetProduct();
     this.checkIfAnyCellsAreComplete(segment.borderingCells);
+    this.game!.nextTurn();
+    this.diceRolled = false;
+  }
+
+  onDiceRolledEvent() {
+    this.diceRolled = true;
   }
 
   resetProduct() {
-    this.game.updateProduct(0, 0);
+    this.game!.updateProduct(1, -1);
   }
 
   checkIfAnyCellsAreComplete(cells: NumberCellModel[]) {
     console.log("cells", cells);
     for (const cell of cells) {
       if (cell.allSidesSelected) {
-        cell.fillColor = this.game.currentPlayerTurn.color;
-        this.game.updateScore();
+        cell.fillColor = this.game!.currentPlayerTurn.color;
+        this.game!.updateScore();
       }
     }
   }
 
+  onSkipTurnEvent() {
+    const ref = this._dialog.open(ConfirmChoicePopupComponent, {
+      data: {
+        message: "Skip turn?"
+      }
+    })
+
+    ref.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.skipTurn();
+      }
+    })
+  }
+
+  skipTurn() {
+    this.game?.nextTurn();
+    this.resetProduct();
+  }
+
+  onResetGame() {
+    const ref = this._dialog.open(ConfirmChoicePopupComponent, {
+      width: "60%",
+      data: {
+        message: "Reset Game?"
+      }
+    })
+
+    ref.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.resetGame()
+      }
+    })
+  }
+
+  resetGame() {
+    this.game = undefined;
+    this.ngOnInit();
+  }
+
   onDiceValueUpdate(nums: number[]) {
-    this.game.updateProduct(nums[0], nums[1]);
+    this.game!.updateProduct(nums[0], nums[1]);
   }
 
 }

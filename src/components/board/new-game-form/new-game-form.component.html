@@ -1,0 +1,38 @@
+
+<div class="container">
+  <h1 style="text-align: center;">Welcome to Multiplication Squares!</h1>
+  <mat-divider></mat-divider>
+
+  <form *ngFor="let playerGroup of playerGroups; let i = index" [formGroup]="playerGroup" >
+    <p>Player {{i + 1}}</p>
+    <div class="form-container">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Color</mat-label>
+        <mat-select formControlName="color" >
+          <mat-option [disabled]="colorIsSelected(color)" *ngFor="let color of colorChoices" [value]="Colors[color]" style="display: flex;">
+            {{ color }}
+            <span class="color" [style.background-color]="Colors[color]"></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+  <mat-form-field style="width: 50%">
+    <mat-label>Max times table</mat-label>
+    <mat-hint>This will be the highest number to multiply with</mat-hint>
+    <mat-select [formControl]="max">
+      <mat-option *ngFor="let num of nums" [value]="num">
+        {{ num }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <div style="display: flex; justify-content: center;">
+    <button style="margin: 0 auto;" mat-button (click)="onGameStartClick()" color="primary">Start game</button>
+  </div>
+</div>
