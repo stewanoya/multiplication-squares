@@ -15,14 +15,17 @@
         *ngIf="rowIndex === 0"
         (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
         [orientation]="'horiz'"
+        [game]="game"
         [firstRow]="true"
         [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'horiz', true)"/>
         <line-segment
+        [game]="game"
         (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
         [orientation]="'horiz'"
         [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'horiz')"/>
         <line-segment
         *ngIf="cell.index === 0"
+        [game]="game"
         (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
         [orientation]="'vert'"
         [firstCell]="true"
@@ -30,6 +33,7 @@
         <line-segment
         (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
         [orientation]="'vert'"
+        [game]="game"
         [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert')"/>
         <div class="cell-value">{{ cell.value }}</div>
       </div>

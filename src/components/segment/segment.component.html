@@ -1,7 +1,10 @@
 <div
   *ngIf="segment"
+  #segmentRef
   (click)="onSegmentClick()"
   class="line-segment"
+  (mouseover)="addHover()"
+  (mouseleave)="removeHover()"
   [style.background-color]="segment.fillColor"
   [ngClass]="{
     'vert-line-segment': !firstCell && segment.orientation === 'vert',
