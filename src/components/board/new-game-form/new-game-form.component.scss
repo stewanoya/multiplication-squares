@@ -15,3 +15,13 @@
   height: 1rem;
   border-radius: 0.25rem;
 }
+
+.max-table {
+  width: 50%
+}
+
+@media (max-width: 850px) {
+  .max-table {
+    width: 100%;
+  }
+}
