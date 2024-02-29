@@ -37,19 +37,25 @@ export class CanvasPopupComponent implements AfterViewInit, OnDestroy{
   removeScrollingPreventListeners() {
     document.body.removeEventListener("touchstart", this.bodyTouchStartListener);
     document.body.removeEventListener("touchend", this.bodyTouchEndListener);
-    document.body.removeEventListener("touchmove", this.bodyTouchMoveListener);
+    document.body.removeEventListener("touchmove", this.bodyTouchStartListener);
   }
 
   addScrollingPreventListeners() {
     // Prevent scrolling when touching the canvas
     this.bodyTouchStartListener = document.body.addEventListener("touchstart", (e) => {
+      if (e.target == this.canvas as any) {
         e.preventDefault();
+      }
     }, false);
     this.bodyTouchEndListener = document.body.addEventListener("touchend", (e) => {
+      if (e.target == this.canvas as any) {
         e.preventDefault();
+      }
     }, false);
     this.bodyTouchMoveListener = document.body.addEventListener("touchmove", (e) => {
+      if (e.target == this.canvas as any) {
         e.preventDefault();
+      }
     }, false);
   }
 
