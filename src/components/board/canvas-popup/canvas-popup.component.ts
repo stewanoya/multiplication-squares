@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { finalize, fromEvent, switchMap, takeUntil, tap } from 'rxjs';
@@ -10,11 +10,14 @@ import { finalize, fromEvent, switchMap, takeUntil, tap } from 'rxjs';
   templateUrl: './canvas-popup.component.html',
   styleUrl: './canvas-popup.component.scss'
 })
-export class CanvasPopupComponent implements AfterViewInit{
+export class CanvasPopupComponent implements AfterViewInit, OnDestroy{
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<CanvasPopupComponent>) {}
 
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement> | undefined;
   context: CanvasRenderingContext2D | undefined;
+  bodyTouchStartListener: any;
+  bodyTouchEndListener: any;
+  bodyTouchMoveListener: any;
 
   fitToContainer(canvas: any){
     canvas.nativeElement.style.width='100%';
@@ -27,22 +30,26 @@ export class CanvasPopupComponent implements AfterViewInit{
     this.context!.clearRect(0, 0, this.canvas!.nativeElement.width, this.canvas!.nativeElement.height);
   }
 
+  ngOnDestroy(): void {
+    this.removeScrollingPreventListeners();
+  }
+
+  removeScrollingPreventListeners() {
+    document.body.removeEventListener("touchstart", this.bodyTouchStartListener);
+    document.body.removeEventListener("touchend", this.bodyTouchEndListener);
+    document.body.removeEventListener("touchmove", this.bodyTouchMoveListener);
+  }
+
   addScrollingPreventListeners() {
     // Prevent scrolling when touching the canvas
-    document.body.addEventListener("touchstart", (e) => {
-      if (e.target == this.canvas as any) {
+    this.bodyTouchStartListener = document.body.addEventListener("touchstart", (e) => {
         e.preventDefault();
-      }
     }, false);
-    document.body.addEventListener("touchend", (e) => {
-      if (e.target == this.canvas as any) {
+    this.bodyTouchEndListener = document.body.addEventListener("touchend", (e) => {
         e.preventDefault();
-      }
     }, false);
-    document.body.addEventListener("touchmove", (e) => {
-      if (e.target == this.canvas as any) {
+    this.bodyTouchMoveListener = document.body.addEventListener("touchmove", (e) => {
         e.preventDefault();
-      }
     }, false);
   }
 
