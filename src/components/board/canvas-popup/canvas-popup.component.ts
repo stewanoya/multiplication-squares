@@ -32,6 +32,7 @@ export class CanvasPopupComponent implements AfterViewInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.removeScrollingPreventListeners();
+    this.removeBodyAndHtmlStyles();
   }
 
   removeScrollingPreventListeners() {
@@ -46,17 +47,17 @@ export class CanvasPopupComponent implements AfterViewInit, OnDestroy{
       if (e.target == this.canvas as any) {
         e.preventDefault();
       }
-    }, false);
+    }, {passive: false});
     this.bodyTouchEndListener = document.body.addEventListener("touchend", (e) => {
       if (e.target == this.canvas as any) {
         e.preventDefault();
       }
-    }, false);
+    }, {passive: false});
     this.bodyTouchMoveListener = document.body.addEventListener("touchmove", (e) => {
       if (e.target == this.canvas as any) {
         e.preventDefault();
       }
-    }, false);
+    }, {passive: false});
   }
 
   setTouchListeners() {
@@ -67,11 +68,11 @@ export class CanvasPopupComponent implements AfterViewInit, OnDestroy{
         clientY: touch.clientY,
       })
       this.canvas?.nativeElement.dispatchEvent(mouseEvent);
-    }, false)
+    }, {passive: false})
     this.canvas?.nativeElement.addEventListener("touchend", (e) => {
       var mouseEvent = new MouseEvent("mouseup", {});
       this.canvas?.nativeElement.dispatchEvent(mouseEvent);
-    }, false);
+    }, {passive: false});
     this.canvas?.nativeElement.addEventListener("touchmove", (e) => {
       var touch = e.touches[0];
       var mouseEvent = new MouseEvent("mousemove", {
@@ -79,18 +80,29 @@ export class CanvasPopupComponent implements AfterViewInit, OnDestroy{
         clientY: touch.clientY
       });
       this.canvas?.nativeElement.dispatchEvent(mouseEvent);
-    }, false);
+    }, {passive: false});
+  }
+
+  setBodyAndHtmlStyles() {
+    document.body.style.overscrollBehaviorY = 'contain';
+    document.documentElement.style.overscrollBehaviorY = 'contain'
+  }
+
+  removeBodyAndHtmlStyles() {
+    document.body.style.overscrollBehaviorY = 'auto';
+    document.documentElement.style.overscrollBehaviorY = 'auto'
   }
 
 
   ngAfterViewInit(): void {
+    this.setBodyAndHtmlStyles()
     this.fitToContainer(this.canvas);
     this.addScrollingPreventListeners();
     this.context = this.canvas?.nativeElement.getContext('2d') as any;
     this.setTouchListeners()
-    const mouseDownStream = fromEvent(this.canvas!.nativeElement, 'mousedown');
-    const mouseMoveStream = fromEvent(this.canvas!.nativeElement, 'mousemove');
-    const mouseUpStream = fromEvent(window, 'mouseup');
+    const mouseDownStream = fromEvent(this.canvas!.nativeElement, 'mousedown', {passive: false});
+    const mouseMoveStream = fromEvent(this.canvas!.nativeElement, 'mousemove', {passive: false});
+    const mouseUpStream = fromEvent(window, 'mouseup', {passive: false});
     mouseDownStream.pipe(
       tap((event: any) => {
         // event.preventDefault();
