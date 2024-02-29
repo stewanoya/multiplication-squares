@@ -32,7 +32,6 @@ export class CanvasPopupComponent implements AfterViewInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.removeScrollingPreventListeners();
-    this.removeBodyAndHtmlStyles();
   }
 
   removeScrollingPreventListeners() {
@@ -83,19 +82,7 @@ export class CanvasPopupComponent implements AfterViewInit, OnDestroy{
     }, {passive: false});
   }
 
-  setBodyAndHtmlStyles() {
-    document.body.style.overscrollBehaviorY = 'contain';
-    document.documentElement.style.overscrollBehaviorY = 'contain'
-  }
-
-  removeBodyAndHtmlStyles() {
-    document.body.style.overscrollBehaviorY = 'auto';
-    document.documentElement.style.overscrollBehaviorY = 'auto'
-  }
-
-
   ngAfterViewInit(): void {
-    this.setBodyAndHtmlStyles()
     this.fitToContainer(this.canvas);
     this.addScrollingPreventListeners();
     this.context = this.canvas?.nativeElement.getContext('2d') as any;
