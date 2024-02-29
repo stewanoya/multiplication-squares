@@ -27,16 +27,60 @@ export class CanvasPopupComponent implements AfterViewInit{
     this.context!.clearRect(0, 0, this.canvas!.nativeElement.width, this.canvas!.nativeElement.height);
   }
 
+  addScrollingPreventListeners() {
+    // Prevent scrolling when touching the canvas
+    document.body.addEventListener("touchstart", (e) => {
+      if (e.target == this.canvas as any) {
+        e.preventDefault();
+      }
+    }, false);
+    document.body.addEventListener("touchend", (e) => {
+      if (e.target == this.canvas as any) {
+        e.preventDefault();
+      }
+    }, false);
+    document.body.addEventListener("touchmove", (e) => {
+      if (e.target == this.canvas as any) {
+        e.preventDefault();
+      }
+    }, false);
+  }
+
+  setTouchListeners() {
+    this.canvas?.nativeElement.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent("mousedown", {
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+      })
+      this.canvas?.nativeElement.dispatchEvent(mouseEvent);
+    }, false)
+    this.canvas?.nativeElement.addEventListener("touchend", (e) => {
+      var mouseEvent = new MouseEvent("mouseup", {});
+      this.canvas?.nativeElement.dispatchEvent(mouseEvent);
+    }, false);
+    this.canvas?.nativeElement.addEventListener("touchmove", (e) => {
+      var touch = e.touches[0];
+      var mouseEvent = new MouseEvent("mousemove", {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      this.canvas?.nativeElement.dispatchEvent(mouseEvent);
+    }, false);
+  }
+
 
   ngAfterViewInit(): void {
     this.fitToContainer(this.canvas);
+    this.addScrollingPreventListeners();
     this.context = this.canvas?.nativeElement.getContext('2d') as any;
-    const mouseDownStream = fromEvent(this.canvas!.nativeElement, 'pointerdown');
-    const mouseMoveStream = fromEvent(this.canvas!.nativeElement, 'pointermove');
-    const mouseUpStream = fromEvent(window, 'pointerup');
+    this.setTouchListeners()
+    const mouseDownStream = fromEvent(this.canvas!.nativeElement, 'mousedown');
+    const mouseMoveStream = fromEvent(this.canvas!.nativeElement, 'mousemove');
+    const mouseUpStream = fromEvent(window, 'mouseup');
     mouseDownStream.pipe(
       tap((event: any) => {
-        event.preventDefault();
+        // event.preventDefault();
         this.context!.beginPath();
         this.context!.strokeStyle = this.data.color;
         this.context!.lineWidth = 3;
@@ -45,7 +89,7 @@ export class CanvasPopupComponent implements AfterViewInit{
       }),
       switchMap(() => mouseMoveStream.pipe(
         tap((event: any) => {
-          event.preventDefault();
+          // event.preventDefault();
           this.context!.lineTo(event.offsetX, event.offsetY);
           this.context!.stroke();
         }),
