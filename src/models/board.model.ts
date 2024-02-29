@@ -10,9 +10,6 @@ export class BoardModel {
   die2Value: number = 0;
   currentPlayerTurn: PlayerModel;
   players: PlayerModel[] = [];
-  //10x10 board
-  // should include products from 1-6 times tables (or bigger numbers depending on user inputs);
-  //
 
   constructor(maxTable: number, players: PlayerModel[]) {
     this.maxValue = maxTable;

@@ -52,7 +52,7 @@ export class CanvasPopupComponent implements AfterViewInit{
           this.context!.closePath();
         })
       ))
-    ).subscribe(console.log);
+    ).subscribe();
   }
 
 }

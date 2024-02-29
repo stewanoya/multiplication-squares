@@ -10,8 +10,6 @@ export class DieModel {
   constructor(maxValue: number) {
     this.maxValue = maxValue;
     this.values = Array.from({length: maxValue}, (_, i) => i + 1)
-    console.log(maxValue);
-    console.log("VALUES", this.values);
   };
 
   rolling$ = this.start$

@@ -166,7 +166,6 @@ export class BoardComponent implements OnInit {
   }
 
   checkIfAnyCellsAreComplete(cells: NumberCellModel[]) {
-    console.log("cells", cells);
     for (const cell of cells) {
       if (cell.allSidesSelected) {
         cell.fillColor = this.game!.currentPlayerTurn.color;
