@@ -15,6 +15,7 @@ import { MatCardModule } from '@angular/material/card'
 import { MessageDialogComponent } from './message-dialog/message-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ConfirmChoicePopupComponent } from './confirm-choice-popup/confirm-choice-popup.component';
+import { CanvasPopupComponent } from './canvas-popup/canvas-popup.component';
 @Component({
   selector: 'board',
   standalone: true,
@@ -55,6 +56,19 @@ export class BoardComponent implements OnInit {
     })
 
     // this.game = new BoardModel(6, this._players.createDummyPlayers());
+  }
+
+  openDrawPopup() {
+    this._dialog.open(CanvasPopupComponent, {
+      data: {
+        color: this.game?.currentPlayerTurn.color,
+        die1Value: this.game?.die1Value,
+        die2Value: this.game?.die2Value,
+      },
+      width: '100%',
+      maxWidth: '98vw',
+      height: '95%',
+    })
   }
 
 

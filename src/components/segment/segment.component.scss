@@ -36,18 +36,19 @@
 
 .vert-line-segment {
   left: 50%;
-  transform: rotate(90deg);
+  transform: rotate(90deg) translateY(-10%);
   top: 50%;
 }
 
 .horiz-line-segment {
   top: 100%;
+  transform: translateY(-20%);
 }
 
 .first-cell-line-segment {
   top: 50%;
   right: 50%;
-  transform: rotate(90deg);
+  transform: rotate(90deg) translateY(-10%);
 }
 
 .hover-32a852 {

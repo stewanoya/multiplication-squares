@@ -1,0 +1,18 @@
+.clear__button {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+}
+.done__button {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+h1 {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  font-size: 3rem;
+  transform: translateX(-50%);
+}

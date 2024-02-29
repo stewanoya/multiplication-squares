@@ -17,9 +17,23 @@ h1 {
   font-size: 2.5rem;
 }
 
+.dice-section__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: fit-content;
+  padding: 1rem
+}
+
 @media (max-width: 850px) {
   .die {
     width: 5rem;
     height: 5rem;
+  }
+
+  .dice-section__container {
+    width: 100%;
   }
 }

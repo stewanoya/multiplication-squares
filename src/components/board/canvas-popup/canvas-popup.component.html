@@ -1,0 +1,6 @@
+<div #canvasContainer style="position: relative; height: 100%; overflow: hidden;" >
+  <h1>{{this.data.die1Value}} x {{this.data.die2Value}}</h1>
+  <canvas #canvas></canvas>
+  <button class="clear__button" color="accent" mat-raised-button (click)="onClearClick()">Clear</button>
+  <button class="done__button" color="primary" mat-raised-button (click)="this.dialogRef.close()">Done Drawing</button>
+</div>

@@ -17,6 +17,7 @@ export class DiceComponent implements OnInit {
   @Output() diceValuesEvent = new EventEmitter<number[]>();
   @Output() diceRolledEvent = new EventEmitter();
   @Output() skipTurnEvent = new EventEmitter();
+  @Output() onDrawEvent = new EventEmitter();
   @Input() diceRolled: boolean = false;
   firstDie: DieModel | undefined;
   secondDie: DieModel | undefined;
@@ -32,6 +33,10 @@ export class DiceComponent implements OnInit {
       .subscribe((vals) => {
         this.diceValuesEvent.emit(vals);
     })
+  }
+
+  onDrawClick() {
+    this.onDrawEvent.emit();
   }
 
   onSkipTurnClick() {

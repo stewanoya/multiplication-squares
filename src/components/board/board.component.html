@@ -42,13 +42,13 @@
 
   <div class="info-section__container">
     <mat-card>
-      <dice (skipTurnEvent)="onSkipTurnEvent()" (diceRolledEvent)="onDiceRolledEvent()" [diceRolled]="diceRolled" [game]="game" (diceValuesEvent)="onDiceValueUpdate($event)" />
+      <dice (onDrawEvent)="openDrawPopup()" (skipTurnEvent)="onSkipTurnEvent()" (diceRolledEvent)="onDiceRolledEvent()" [diceRolled]="diceRolled" [game]="game" (diceValuesEvent)="onDiceValueUpdate($event)" />
     </mat-card>
 
     <mat-card style="padding: 1rem" >
       <div class="current-turn__container">
         <h2 class="current-turn">Current Turn:</h2>
-        <p>{{ game.currentPlayerTurn.name }}</p>
+        <p [style.background-color]="game.currentPlayerTurn.color" class="current-turn-name">{{ game.currentPlayerTurn.name }}</p>
       </div>
     </mat-card>
 

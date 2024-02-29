@@ -38,11 +38,11 @@ $small-screen-cell-size: 3rem;
   border-radius: 100%;
   background: rgb(7, 2, 29);
   position: absolute;
-  z-index: 10;
+  z-index: 50;
 }
 
 .current-turn {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .cell-value {
@@ -68,13 +68,20 @@ p {
 }
 
 .righttop {
-  right: -5px;
-  top: -5px;
+  right: -7px;
+  top: -6px;
 }
 
 .rightbottom {
-  right: -5px;
-  bottom: -5px;
+  right: -7px;
+  bottom: -7px;
+}
+
+.current-turn-name {
+  font-size: 1.25rem;
+  width: fit-content;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1000px;
 }
 
 @media (max-width: 850px) {
