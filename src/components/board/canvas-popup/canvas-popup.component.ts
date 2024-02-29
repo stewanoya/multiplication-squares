@@ -36,6 +36,7 @@ export class CanvasPopupComponent implements AfterViewInit{
     const mouseUpStream = fromEvent(window, 'pointerup');
     mouseDownStream.pipe(
       tap((event: any) => {
+        event.preventDefault();
         this.context!.beginPath();
         this.context!.strokeStyle = this.data.color;
         this.context!.lineWidth = 3;
@@ -44,6 +45,7 @@ export class CanvasPopupComponent implements AfterViewInit{
       }),
       switchMap(() => mouseMoveStream.pipe(
         tap((event: any) => {
+          event.preventDefault();
           this.context!.lineTo(event.offsetX, event.offsetY);
           this.context!.stroke();
         }),
