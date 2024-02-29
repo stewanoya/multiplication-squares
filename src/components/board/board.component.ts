@@ -43,19 +43,19 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const ref = this._dialog.open(NewGameFormComponent, {
-      disableClose: true,
-      width: '90%',
-      height: '90%'
-    })
+    // const ref = this._dialog.open(NewGameFormComponent, {
+    //   disableClose: true,
+    //   width: '90%',
+    //   height: '90%'
+    // })
 
-    ref.afterClosed().subscribe((gameSettings) => {
-      if (gameSettings) {
-        this.game = new BoardModel(gameSettings.max, gameSettings.players);
-      }
-    })
+    // ref.afterClosed().subscribe((gameSettings) => {
+    //   if (gameSettings) {
+    //     this.game = new BoardModel(gameSettings.max, gameSettings.players);
+    //   }
+    // })
 
-    // this.game = new BoardModel(6, this._players.createDummyPlayers());
+    this.game = new BoardModel(6, this._players.createDummyPlayers());
   }
 
   openDrawPopup() {
