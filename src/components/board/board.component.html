@@ -4,7 +4,7 @@
 
 <div *ngIf="game" class="game__container">
   <mat-card class="board__container">
-    <h1 style="font-size: 1.75rem; text-align: center;">Multiplication Squares Online</h1>
+    <h1 style="font-size: 1.75rem; text-align: center;">Multiplication Squares</h1>
     <div *ngFor="let row of game.currentBoard; let rowIndex = index;" class="board-row">
       <div [style.background-color]="cell.fillColor" class="cell" *ngFor="let cell of row;">
         <div class="lefttop dot"></div>
