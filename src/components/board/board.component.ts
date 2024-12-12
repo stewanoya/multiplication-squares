@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NumberCellModel } from '../../models/number-cell.model';
 import { SegmentComponent } from '../segment/segment.component';
 import { LineSegment } from '../../models/line-segment.model';
-import { SegmentOrientation } from '../../models/consts.model';
+import { Colors, SegmentOrientation } from '../../models/consts.model';
 import { PlayerService } from '../../services/player.service';
 import { DiceComponent } from '../dice/dice.component';
 
@@ -16,6 +16,7 @@ import { MessageDialogComponent } from './message-dialog/message-dialog.componen
 import { MatButtonModule } from '@angular/material/button';
 import { ConfirmChoicePopupComponent } from './confirm-choice-popup/confirm-choice-popup.component';
 import { CanvasPopupComponent } from './canvas-popup/canvas-popup.component';
+import { PlayerModel } from '../../models/player.model';
 @Component({
   selector: 'board',
   standalone: true,
@@ -43,7 +44,7 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.game = new BoardModel(1, []);
+    this.game = new BoardModel(1, [new PlayerModel('waiting to start', Colors['green'])]);
 
     const ref = this._dialog.open(NewGameFormComponent, {
       disableClose: true,
