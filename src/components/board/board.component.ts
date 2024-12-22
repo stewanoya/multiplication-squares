@@ -44,8 +44,6 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.game = new BoardModel(1, [new PlayerModel('waiting to start', Colors['green'])]);
-
     const ref = this._dialog.open(NewGameFormComponent, {
       disableClose: true,
       width: '90%',
