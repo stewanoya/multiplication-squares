@@ -8,6 +8,14 @@ $small-screen-cell-size: 3rem;
   overflow: visible;
 }
 
+.page-description {
+  font-size: 0.75rem;
+  color: #bbb;
+  text-align: center;
+  margin: 0.25rem 1rem;
+  line-height: 1.4;
+}
+
 .game__container {
   display: flex;
   gap: 2rem;
