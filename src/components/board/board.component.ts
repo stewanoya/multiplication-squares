@@ -17,6 +17,30 @@ import { MatButtonModule } from '@angular/material/button';
 import { ConfirmChoicePopupComponent } from './confirm-choice-popup/confirm-choice-popup.component';
 import { CanvasPopupComponent } from './canvas-popup/canvas-popup.component';
 import { PlayerModel } from '../../models/player.model';
+import { CelebrationComponent } from '../celebration/celebration.component';
+
+const COMPLIMENTS = [
+  'Nice job',
+  'Great work',
+  'Fantastic',
+  'Well done',
+  "You're on a roll",
+  'Square-y nice move',
+  'You nailed it',
+  "That's acute move",
+  "You're sum kind of genius",
+  'Area you kidding me?!',
+  'You drew the line',
+  "That's a perfect square",
+  'Four sides, all yours',
+  'Box secured',
+  'You squared it away',
+  'Multiply that win',
+  'Math wizard',
+  "Line 'em up",
+  'Boxed in beautifully',
+  'Right on the dot',
+];
 @Component({
   selector: 'board',
   standalone: true,
@@ -27,7 +51,8 @@ import { PlayerModel } from '../../models/player.model';
     MatSnackBarModule,
     MatDialogModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    CelebrationComponent,
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
@@ -36,6 +61,8 @@ export class BoardComponent implements OnInit {
 
   game: BoardModel | undefined;
   diceRolled = false;
+  celebrationVisible = false;
+  celebrationMessage = '';
 
   constructor(
     private _snackbar: MatSnackBar,
@@ -171,8 +198,16 @@ export class BoardComponent implements OnInit {
       if (cell.allSidesSelected) {
         cell.fillColor = this.game!.currentPlayerTurn.color;
         this.game!.updateScore();
+        this.showCelebration(this.game!.currentPlayerTurn.name);
       }
     }
+  }
+
+  showCelebration(playerName: string) {
+    const compliment = COMPLIMENTS[Math.floor(Math.random() * COMPLIMENTS.length)];
+    this.celebrationMessage = `${compliment}, ${playerName}!`;
+    this.celebrationVisible = true;
+    setTimeout(() => { this.celebrationVisible = false; }, 4000);
   }
 
   onSkipTurnEvent() {

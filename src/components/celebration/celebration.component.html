@@ -1,0 +1,21 @@
+<div class="overlay" *ngIf="visible">
+  <div class="burst-origin">
+    <div
+      *ngFor="let p of particles"
+      class="particle"
+      [style.background-color]="p.color"
+      [style.width.px]="p.width"
+      [style.height.px]="p.height"
+      [style.border-radius]="p.borderRadius"
+      [style.--tx]="p.tx"
+      [style.--ty]="p.ty"
+      [style.--rot]="p.rot"
+      [style.animation-duration]="p.duration"
+      [style.animation-delay]="p.delay"
+    ></div>
+  </div>
+
+  <div class="message">
+    {{ message }}
+  </div>
+</div>

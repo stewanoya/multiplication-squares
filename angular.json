@@ -28,7 +28,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/ads.txt"
+              "src/ads.txt",
+              "src/sitemap.xml"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/deeppurple-amber.css",

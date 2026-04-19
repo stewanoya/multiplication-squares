@@ -1,0 +1,61 @@
+<div class="landing-container">
+  <section class="hero">
+    <h1>Multiplication Squares — Free Online Math Game</h1>
+    <p class="tagline">
+      The classic dots-and-boxes multiplication game, played directly in your browser.
+      No printing, no prep, no download. Free for classrooms.
+    </p>
+
+    <!-- TODO: og-image — add <img> here once src/assets/og-image.png is provided -->
+    <img src="assets/og-image.png" alt="Multiplication Squares game board showing a grid of numbers with colored squares captured by players" class="hero-image" />
+
+    <p class="teacher-pitch">
+      Set up in seconds. Up to 4 players. Students roll dice, multiply the numbers,
+      and race to capture the most squares on the board. Great for Grades 1–8.
+    </p>
+
+    <button mat-flat-button color="primary" class="cta-button" (click)="play()">
+      Play Now
+    </button>
+  </section>
+
+  <section class="benefits">
+    <div class="benefit-card">
+      <span class="material-icons">trending_up</span>
+      <h3>Build Multiplication Fluency Through Play</h3>
+      <p>Students practice times tables from 6 to 12 by rolling dice and finding products on the board. Repeated exposure feels like a game, not a drill — so kids actually want to keep going.</p>
+    </div>
+    <div class="benefit-card">
+      <span class="material-icons">psychology</span>
+      <h3>Strategy, Not Just Memorization</h3>
+      <p>Unlike flashcard drills, Multiplication Squares rewards thinking. Players learn to recognize which squares are most contested and plan their moves accordingly — building mathematical reasoning alongside fact recall.</p>
+    </div>
+    <div class="benefit-card">
+      <span class="material-icons">bolt</span>
+      <h3>No Prep. No Printing. Open and Play.</h3>
+      <p>Every other version of this game requires printed worksheets. This is the only browser-playable version. Open a tab in class, pick your players, and start in seconds — no account, no download, no cost.</p>
+    </div>
+    <div class="benefit-card">
+      <span class="material-icons">groups</span>
+      <h3>Built for the Classroom</h3>
+      <p>Works with 2–4 players. Ideal for math centers, partner work, early finishers, or end-of-unit celebrations. Supports differentiated instruction across Grades 1–8 with adjustable board sizes.</p>
+    </div>
+  </section>
+
+  <section class="how-to-play">
+    <h2>How to Play</h2>
+    <ol>
+      <li>Write your names and pick a color for each player</li>
+      <li>Roll the dice</li>
+      <li>Pick a side of a number that equals the first die multiplied by the second die. For example: if you roll 3 and 2, you can draw a line beside any 6 square, since 3 x 2 = 6</li>
+      <li>If you draw the line that creates a square around a number, that number is filled in with your color, and you score a point.</li>
+      <li>If the number you're looking for isn't available, you have to skip your turn.</li>
+      <li>Play until there are no options left for any players. Highest score wins!</li>
+      <li>If you want to play again, simply reset the game.</li>
+    </ol>
+
+    <button mat-flat-button color="primary" class="cta-button" (click)="play()">
+      Play Now
+    </button>
+  </section>
+</div>

@@ -1,0 +1,59 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.burst-origin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  animation: burst forwards ease-out;
+
+  @keyframes burst {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--rot));
+      opacity: 0;
+    }
+  }
+}
+
+.message {
+  position: relative;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 0, 0, 0.4);
+  animation: message-life 4s forwards;
+  padding: 0 1rem;
+
+  @keyframes message-life {
+    0%   { transform: scale(0.5); opacity: 0; }
+    8%   { transform: scale(1);   opacity: 1; }
+    70%  { transform: scale(1);   opacity: 1; }
+    100% { transform: scale(1);   opacity: 0; }
+  }
+}
