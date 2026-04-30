@@ -1,0 +1,19 @@
+<div class="page-container">
+  <section class="page-hero">
+    <h1>Frequently Asked Questions</h1>
+    <p class="lead">Everything teachers need to know before using Multiplication Squares in class.</p>
+  </section>
+
+  <section class="faq-list">
+    @for (item of items; track item.question) {
+      <div class="faq-item">
+        <h2>{{ item.question }}</h2>
+        <p>{{ item.answer }}</p>
+      </div>
+    }
+  </section>
+
+  <div class="cta-block">
+    <a routerLink="/play" mat-flat-button color="primary" class="cta-button">Try the Game — It's Free</a>
+  </div>
+</div>

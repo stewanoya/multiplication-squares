@@ -49,10 +49,19 @@
 }
 
 .benefits {
+  padding: 2rem 0;
+
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+  }
+}
+
+.benefit-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
-  padding: 2rem 0;
 
   .benefit-card {
     background: #f9f9f9;
@@ -81,7 +90,7 @@
 }
 
 @media (max-width: 600px) {
-  .benefits {
+  .benefit-cards {
     grid-template-columns: 1fr;
   }
 }
