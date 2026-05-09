@@ -70,3 +70,24 @@
     }
   }
 }
+
+.play-footer {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid #e8e8e8;
+  background: #fafafa;
+
+  a {
+    font-size: 0.8rem;
+    color: #999;
+    text-decoration: none;
+    font-family: 'Fredoka One', sans-serif;
+    transition: color 0.15s;
+
+    &:hover {
+      color: #4530c9;
+    }
+  }
+}

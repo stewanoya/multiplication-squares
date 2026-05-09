@@ -1,7 +1,3 @@
-<!-- <div *ngIf="!game" style="height: 100svh">
-
-</div> -->
-
 <app-celebration [visible]="celebrationVisible" [message]="celebrationMessage" />
 
 <p class="page-description">
@@ -10,65 +6,68 @@
 
 <div *ngIf="game" class="game__container">
   <mat-card class="board__container">
-    <h1 style="font-size: 1.75rem; text-align: center;">Multiplication Squares</h1>
-    <div *ngFor="let row of game.currentBoard; let rowIndex = index;" class="board-row">
-      <div [style.background-color]="cell.fillColor" class="cell" *ngFor="let cell of row;">
-        <div class="lefttop dot"></div>
-        <div class="leftbottom dot"></div>
-        <div class="righttop dot"></div>
-        <div class="rightbottom dot"></div>
-        <line-segment
-        *ngIf="rowIndex === 0"
-        (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
-        [orientation]="'horiz'"
-        [game]="game"
-        [firstRow]="true"
-        [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'horiz', true)"/>
-        <line-segment
-        [game]="game"
-        (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
-        [orientation]="'horiz'"
-        [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'horiz')"/>
-        <line-segment
-        *ngIf="cell.index === 0"
-        [game]="game"
-        (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
-        [orientation]="'vert'"
-        [firstCell]="true"
-        [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert', true)"/>
-        <line-segment
-        (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
-        [orientation]="'vert'"
-        [game]="game"
-        [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert')"/>
-        <div class="cell-value">{{ cell.value }}</div>
+    <h1 class="board-title">Multiplication Squares</h1>
+    <div class="board-wrapper">
+      <div *ngFor="let row of game.currentBoard; let rowIndex = index;" class="board-row">
+        <div [style.background-color]="cell.fillColor"
+             [class.cell--filled]="!!cell.fillColor"
+             class="cell"
+             *ngFor="let cell of row;">
+          <line-segment
+          *ngIf="rowIndex === 0"
+          (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
+          [orientation]="'horiz'"
+          [game]="game"
+          [firstRow]="true"
+          [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'horiz', true)"/>
+          <line-segment
+          [game]="game"
+          (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
+          [orientation]="'horiz'"
+          [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'horiz')"/>
+          <line-segment
+          *ngIf="cell.index === 0"
+          [game]="game"
+          (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
+          [orientation]="'vert'"
+          [firstCell]="true"
+          [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert', true)"/>
+          <line-segment
+          (segmentClickEvent)="onSegmentSelected($event, row, rowIndex)"
+          [orientation]="'vert'"
+          [game]="game"
+          [neighbourCells]="getNeighbourCells(row, rowIndex, cell, 'vert')"/>
+          <div class="cell-value">{{ cell.value }}</div>
+        </div>
+      </div>
+      <div class="dot-overlay" aria-hidden="true">
+        <div *ngFor="let d of dotGrid" class="dot-overlay__dot"></div>
       </div>
     </div>
   </mat-card>
 
   <div class="info-section__container">
-    <mat-card>
+    <mat-card class="info-card">
       <dice (onDrawEvent)="openDrawPopup()" (skipTurnEvent)="onSkipTurnEvent()" (diceRolledEvent)="onDiceRolledEvent()" [diceRolled]="diceRolled" [game]="game" (diceValuesEvent)="onDiceValueUpdate($event)" />
     </mat-card>
 
-    <mat-card style="padding: 1rem" >
-      <div class="current-turn__container">
-        <h2 class="current-turn">Current Turn:</h2>
-        <p [style.background-color]="game.currentPlayerTurn.color" class="current-turn-name">{{ game.currentPlayerTurn.name }}</p>
+    <mat-card class="info-card turn-card">
+      <p class="section-label">Current Turn</p>
+      <div class="turn-badge" [style.background-color]="game.currentPlayerTurn.color">
+        {{ game.currentPlayerTurn.name }}
       </div>
     </mat-card>
 
-    <mat-card style="padding: 1rem">
-      <h1>Scores:</h1>
-      <p [style.color]="player.color" *ngFor="let player of game.players">
-        {{player.name}} <span style="color: black;"> - {{player.score}}</span>
-      </p>
+    <mat-card class="info-card score-card">
+      <p class="section-label">Scores</p>
+      <div *ngFor="let player of game.players" class="score-row">
+        <span class="score-name" [style.background-color]="player.color">{{ player.name }}</span>
+        <span class="score-val">{{ player.score }}</span>
+      </div>
     </mat-card>
 
-
-  </div>
-
-  <div>
-    <button (click)="onResetGame()" mat-button>Reset game</button>
+    <div>
+      <button (click)="onResetGame()" mat-button>Reset game</button>
+    </div>
   </div>
 </div>

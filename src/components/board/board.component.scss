@@ -1,10 +1,10 @@
-
 $cell-size: 5rem;
 $small-screen-cell-size: 3rem;
+$xs-cell-size: 2.3rem;
 
 .board-row {
   display: grid;
-  grid-template-columns: $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size $cell-size;
+  grid-template-columns: repeat(10, $cell-size);
   overflow: visible;
 }
 
@@ -20,18 +20,58 @@ $small-screen-cell-size: 3rem;
   display: flex;
   gap: 2rem;
   margin: 2rem;
+  align-items: flex-start;
 }
 
 .info-section__container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 2rem;
-  padding-right: 2rem;
+  gap: 1.25rem;
+  min-width: 16rem;
 }
 
 .board__container {
-  padding: 2rem;
+  padding: 1.5rem;
+  border-radius: var(--card-radius, 1.25rem);
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.board-title {
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 1.6rem;
+  text-align: center;
+  margin: 0 0 1rem;
+  color: #4530c9;
+}
+
+.board-wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
+.dot-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: repeat(11, $cell-size);
+  grid-template-rows: repeat(11, $cell-size);
+  overflow: visible;
+  z-index: 50;
+}
+
+.dot-overlay__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--dot-color, #1a1040);
+  place-self: start start;
+  transform: translate(-50%, -50%);
 }
 
 .cell {
@@ -40,17 +80,13 @@ $small-screen-cell-size: 3rem;
   height: $cell-size;
 }
 
-.dot {
-  height: 12px;
-  width: 12px;
-  border-radius: 100%;
-  background: rgb(7, 2, 29);
-  position: absolute;
-  z-index: 50;
+.cell--filled {
+  animation: cell-fill-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.current-turn {
-  font-size: 1.5rem;
+@keyframes cell-fill-in {
+  from { opacity: 0.2; transform: scale(0.65); }
+  to   { opacity: 1;   transform: scale(1); }
 }
 
 .cell-value {
@@ -58,64 +94,156 @@ $small-screen-cell-size: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.75rem;
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 1.6rem;
+  color: #1a1040;
+  position: relative;
+  z-index: 5;
 }
 
-p {
-  font-size: 1.5rem;
+.info-card {
+  padding: 1rem;
+  border-radius: var(--card-radius, 1.25rem);
 }
 
-.lefttop {
-  top: -5px;
-  left: -5px;
+.section-label {
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 1rem;
+  color: #888;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.leftbottom {
-  bottom: -5px;
-  left: -5px;
+.turn-card {
+  text-align: center;
 }
 
-.righttop {
-  right: -7px;
-  top: -6px;
+.turn-badge {
+  display: inline-block;
+  padding: 0.4rem 1.25rem;
+  border-radius: 2rem;
+  color: white;
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  word-break: break-word;
 }
 
-.rightbottom {
-  right: -7px;
-  bottom: -7px;
+.score-card {
+  padding: 1rem;
 }
 
-.current-turn-name {
-  font-size: 1.25rem;
-  width: fit-content;
-  padding: 0.25rem 0.5rem;
-  border-radius: 1000px;
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.4rem 0;
 }
 
-@media (max-width: 850px) {
+.score-name {
+  color: white;
+  border-radius: 2rem;
+  padding: 0.2rem 0.75rem;
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 8rem;
+}
+
+.score-val {
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Switch to vertical layout below 1200px — prevents dice overflow at mid-sizes */
+@media (max-width: 1199px) {
   .game__container {
-    justify-content: center;
     flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+    gap: 1.25rem;
   }
 
   .board__container {
     margin: 0 auto;
+    overflow-x: auto;
+    max-width: calc(100vw - 2rem);
   }
 
-  .current-turn__container {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .board-row {
-    grid-template-columns: $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size $small-screen-cell-size;
-  }
   .info-section__container {
+    width: 100%;
+    max-width: calc(10 * $cell-size);
     padding-right: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    > * {
+      flex: 1 1 12rem;
+    }
+  }
+}
+
+/* Reduce cell size when board would overflow the viewport */
+@media (max-width: 900px) {
+  .board-row {
+    grid-template-columns: repeat(10, $small-screen-cell-size);
   }
 
   .cell {
     height: $small-screen-cell-size;
+  }
+
+  .dot-overlay {
+    grid-template-columns: repeat(11, $small-screen-cell-size);
+    grid-template-rows: repeat(11, $small-screen-cell-size);
+  }
+
+  .cell-value {
+    font-size: 1.1rem;
+  }
+
+  .info-section__container {
+    max-width: calc(10 * $small-screen-cell-size);
+  }
+}
+
+@media (max-width: 600px) {
+  .game__container {
+    margin: 0.5rem;
+  }
+
+  .board-row {
+    grid-template-columns: repeat(10, $xs-cell-size);
+  }
+
+  .cell {
+    height: $xs-cell-size;
+  }
+
+  .dot-overlay {
+    grid-template-columns: repeat(11, $xs-cell-size);
+    grid-template-rows: repeat(11, $xs-cell-size);
+  }
+
+  .cell-value {
+    font-size: 0.85rem;
+  }
+
+  .dot-overlay__dot {
+    width: 9px;
+    height: 9px;
+  }
+
+  .info-section__container {
+    max-width: calc(10 * $xs-cell-size);
+    flex-direction: column;
   }
 }

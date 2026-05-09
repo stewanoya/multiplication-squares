@@ -257,4 +257,8 @@ export class BoardComponent implements OnInit {
     this.game!.updateProduct(nums[0], nums[1]);
   }
 
+  get dotGrid(): number[] {
+    return Array.from({ length: 121 }, (_, i) => i);
+  }
+
 }

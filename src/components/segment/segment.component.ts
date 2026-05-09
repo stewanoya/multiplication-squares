@@ -37,6 +37,12 @@ export class SegmentComponent implements OnInit {
   }
 
   onSegmentClick() {
+    if (this.segment?.isSelected) return;
     this.segmentClickEvent.emit(this.segment);
+    const el = this.segmentRef?.nativeElement;
+    if (el) {
+      el.classList.add('segment--claimed');
+      setTimeout(() => el.classList.remove('segment--claimed'), 350);
+    }
   }
 }

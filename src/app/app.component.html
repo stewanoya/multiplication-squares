@@ -1,4 +1,4 @@
-<header class="site-header">
+<header *ngIf="!isPlayRoute" class="site-header">
   <div class="header-inner">
     <a routerLink="/" class="site-logo">Multiplication Squares</a>
     <nav class="nav-links">
@@ -10,3 +10,9 @@
 </header>
 
 <router-outlet />
+
+<footer *ngIf="isPlayRoute" class="play-footer">
+  <a routerLink="/">Home</a>
+  <a routerLink="/about">About</a>
+  <a routerLink="/faq">FAQ</a>
+</footer>

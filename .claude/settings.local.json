@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"D:\\\\repos\\\\math-squares\\\\src\" -Recurse -Name | Where-Object { $_ -notmatch \"node_modules|\\\\.git\" })",
+      "Bash(npx ng *)"
+    ]
+  }
+}

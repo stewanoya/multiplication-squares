@@ -1,51 +1,76 @@
 
-<div class="container">
-  <h1 style="text-align: center;">Welcome to Multiplication Squares!</h1>
-  <mat-divider></mat-divider>
+<div class="modal-wrapper">
 
-  <form *ngFor="let playerGroup of playerGroups; let i = index" [formGroup]="playerGroup" >
-    <p>Player {{i + 1}}</p>
-    <div class="form-container">
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Color</mat-label>
-        <mat-select formControlName="color" >
-          <mat-option [disabled]="colorIsSelected(color)" *ngFor="let color of colorChoices" [value]="Colors[color]" style="display: flex;">
-            {{ color }}
-            <span class="color" [style.background-color]="Colors[color]"></span>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </form>
-  <mat-form-field class="max-table">
-    <mat-label>Max times table</mat-label>
-    <mat-hint>This will be the highest number to multiply with</mat-hint>
-    <mat-select [formControl]="max">
-      <mat-option *ngFor="let num of nums" [value]="num">
-        {{ num }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-
-  <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; flex-direction: column; margin-top: 2rem;">
-    <button
-      style="font-size: 1.75rem; padding: 1rem;"
-      mat-button
-      (click)="onGameStartClick()"
-      color="primary">
-        Start game
-    </button>
-    <button
-      style="font-size: 1.75rem; padding: 1rem;"
-      mat-button
-      (click)="onHowToPlayClick()"
-      color="accent">
-        How to play
-    </button>
+  <!-- Progress bar (shown after step 0) -->
+  <div *ngIf="step > 0" class="progress-bar-track">
+    <div class="progress-bar-fill" [style.width.%]="progressPercent"></div>
   </div>
+
+  <!-- Step 0: Choose number of players -->
+  <div *ngIf="step === 0" class="step-content step-count">
+    <h1 class="modal-title">Welcome!</h1>
+    <p class="step-question">How many players are there?</p>
+    <div class="count-buttons">
+      <button class="count-btn" (click)="choosePlayerCount(2)" type="button">2</button>
+      <button class="count-btn" (click)="choosePlayerCount(3)" type="button">3</button>
+      <button class="count-btn" (click)="choosePlayerCount(4)" type="button">4</button>
+    </div>
+    <button class="btn-link" (click)="onHowToPlayClick()" type="button">How to play</button>
+  </div>
+
+  <!-- Steps 1..N: Player setup -->
+  <ng-container *ngIf="isPlayerStep && currentGroup">
+    <div class="step-content" [formGroup]="currentGroup">
+      <h1 class="modal-title">Player {{ step }}, what's your name?</h1>
+      <mat-form-field class="name-field" appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" autocomplete="off" />
+        <mat-hint *ngIf="!currentGroup.controls['name'].value">Leave blank for a random name!</mat-hint>
+      </mat-form-field>
+
+      <p class="step-question color-question">Pick your color</p>
+      <div class="swatch-grid">
+        <button *ngFor="let c of colorChoices"
+                class="swatch"
+                [class.swatch--selected]="currentGroup.controls['color'].value === c.hex"
+                [class.swatch--taken]="colorIsSelectedByOther(c.hex)"
+                [style.background-color]="c.hex"
+                (click)="selectColor(c.hex)"
+                type="button"
+                [attr.aria-label]="c.key">
+          <span class="swatch-check" *ngIf="currentGroup.controls['color'].value === c.hex">&#10003;</span>
+          <span class="swatch-taken" *ngIf="colorIsSelectedByOther(c.hex)">&#10005;</span>
+        </button>
+      </div>
+
+      <p *ngIf="currentColorMissing" class="color-hint">Pick a color to continue</p>
+
+      <div class="step-actions">
+        <button class="btn-back" (click)="back()" type="button">Back</button>
+        <button class="btn-next"
+                [disabled]="currentColorMissing"
+                [style.background-color]="currentGroup.controls['color'].value || '#ccc'"
+                (click)="next()" type="button">
+          {{ step < numPlayers ? 'Next Player' : 'Continue' }}
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Last step: Times table -->
+  <div *ngIf="isTableStep" class="step-content step-table">
+    <h1 class="modal-title">Times Tables</h1>
+    <p class="step-question">What's the highest number to multiply with?</p>
+    <mat-form-field class="max-table" appearance="outline">
+      <mat-label>Max times table</mat-label>
+      <mat-select [formControl]="max">
+        <mat-option *ngFor="let num of nums" [value]="num">{{ num }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="step-actions">
+      <button class="btn-back" (click)="back()" type="button">Back</button>
+      <button class="btn-start" (click)="startGame()" type="button">Let's Play!</button>
+    </div>
+  </div>
+
 </div>

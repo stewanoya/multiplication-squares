@@ -4,40 +4,36 @@
   width: 100%;
   cursor: pointer;
   z-index: 10;
+  border-radius: 0.25rem;
+  transition: background-color 0.18s ease;
 }
 
-// .line-segment-before-dot {
-//   position: absolute;
-//   right: 0px;
-//   top: 50%;
-//   transform: translate(50%, -50%);
-//   border-radius: 100%;
-//   background-color: rgb(11, 7, 37);;
-//   width: 0.5rem;
-//   height: 0.5rem;
-//   z-index: 99;
-// }
+.line-segment.segment--claimed {
+  animation: segment-pop 0.3s ease;
+}
 
-// .line-segment-after-dot {
-//   position: absolute;
-//   left: 0px;
-//   top: 50%;
-//   transform: translateX(-50%, 50%);
-//   border-radius: 100%;
-//   background-color: rgb(11, 7, 37);
-//   width: 0.5rem;
-//   height: 0.5rem;
-//   z-index: 99;
-// }
-
-// .line-segment:hover {
-//   background-color: rgb(148, 148, 148);
-// }
+@keyframes segment-pop {
+  0%   { transform: scaleY(1); }
+  40%  { transform: scaleY(2.2); }
+  70%  { transform: scaleY(1.4); }
+  100% { transform: scaleY(1); }
+}
 
 .vert-line-segment {
   left: 50%;
   transform: rotate(90deg) translateY(-10%);
   top: 50%;
+}
+
+.vert-line-segment.segment--claimed {
+  animation: segment-pop-vert 0.3s ease;
+}
+
+@keyframes segment-pop-vert {
+  0%   { transform: rotate(90deg) translateY(-10%) scaleY(1); }
+  40%  { transform: rotate(90deg) translateY(-10%) scaleY(2.2); }
+  70%  { transform: rotate(90deg) translateY(-10%) scaleY(1.4); }
+  100% { transform: rotate(90deg) translateY(-10%) scaleY(1); }
 }
 
 .horiz-line-segment {
@@ -51,21 +47,24 @@
   transform: rotate(90deg) translateY(-10%);
 }
 
-.hover-32a852 {
-  background-color: #32a852
+.first-cell-line-segment.segment--claimed {
+  animation: segment-pop-vert 0.3s ease;
 }
-.hover-edcd1a {
-  background-color: #edcd1a
-}
-.hover-cf413c {
-  background-color: #cf413c
-}
-.hover-177ec2 {
-  background-color: #177ec2
-}
-.hover-4530c9 {
-  background-color: #4530c9
-}
-.hover-d117c2 {
-  background-color: #d117c2
-}
+
+/* Hover colors — existing 6 */
+.hover-32a852 { background-color: #32a852 }
+.hover-edcd1a { background-color: #edcd1a }
+.hover-cf413c { background-color: #cf413c }
+.hover-177ec2 { background-color: #177ec2 }
+.hover-4530c9 { background-color: #4530c9 }
+.hover-d117c2 { background-color: #d117c2 }
+
+/* Hover colors — new 8 */
+.hover-38bdf8 { background-color: #38bdf8 }
+.hover-fb7185 { background-color: #fb7185 }
+.hover-84cc16 { background-color: #84cc16 }
+.hover-f59e0b { background-color: #f59e0b }
+.hover-f97316 { background-color: #f97316 }
+.hover-14b8a6 { background-color: #14b8a6 }
+.hover-8b5cf6 { background-color: #8b5cf6 }
+.hover-f43f5e { background-color: #f43f5e }
