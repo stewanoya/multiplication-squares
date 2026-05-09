@@ -6,7 +6,7 @@ import { SeoService } from '../../services/seo.service';
 const FAQ_ITEMS = [
   {
     question: 'What grade levels is this for?',
-    answer: 'Multiplication Squares works for Grades 1–8. The board size adjusts — a smaller board covers lower products, while a larger board extends to bigger multiplication facts. Choose the size that matches what your class is working on.'
+    answer: 'Multiplication Squares works for Grades 3–8. The board size adjusts — a smaller board covers lower products, while a larger board extends to bigger multiplication facts. Choose the size that matches what your class is working on.'
   },
   {
     question: 'How many players can play?',

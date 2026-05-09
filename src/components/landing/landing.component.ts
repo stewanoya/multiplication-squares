@@ -16,7 +16,7 @@ export class LandingComponent implements OnInit {
   ngOnInit() {
     this.seo.set({
       title: 'Multiplication Squares: Free Online Math Game',
-      description: 'Play Multiplication Squares free in your browser. No printing, no prep. Roll dice, capture squares, practice times tables. Works for Grades 1 to 8.',
+      description: 'Play Multiplication Squares free in your browser. No printing, no prep. Roll dice, capture squares, practice times tables. Works for Grades 3 to 8.',
       canonical: 'https://m-squares.anoya.ca/'
     });
   }
