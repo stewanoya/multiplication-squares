@@ -51,6 +51,22 @@
   }
 }
 
+.print-nav-btn {
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 4px;
+  padding: 0.3rem 0.75rem;
+  color: #ede7f6 !important;
+  text-decoration: none !important;
+
+  &:hover,
+  &.active {
+    border-color: #fff !important;
+    color: #fff !important;
+    text-decoration: none !important;
+  }
+}
+
 .play-btn {
   font-size: 0.9rem;
   background: #fff !important;
@@ -68,6 +84,12 @@
     a:not(.play-btn) {
       font-size: 0.85rem;
     }
+  }
+}
+
+@media print {
+  .site-header {
+    display: none !important;
   }
 }
 

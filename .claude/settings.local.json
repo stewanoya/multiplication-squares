@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "PowerShell(Get-ChildItem \"D:\\\\repos\\\\math-squares\\\\src\" -Recurse -Name | Where-Object { $_ -notmatch \"node_modules|\\\\.git\" })",
-      "Bash(npx ng *)"
+      "Bash(npx ng *)",
+      "WebSearch",
+      "WebFetch(domain:m-squares.anoya.ca)",
+      "WebFetch(domain:www.games4gains.com)",
+      "Skill(humanizer)"
     ]
   }
 }

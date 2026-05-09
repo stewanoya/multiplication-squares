@@ -1,0 +1,64 @@
+<div class="print-page">
+
+  <div class="controls no-print">
+    <h1>Multiplication Squares — Printable Game Board</h1>
+    <p class="subtitle">Pick your max times table, generate a board, and print it for class.</p>
+    <div class="controls-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Max times table</mat-label>
+        <mat-select [formControl]="maxTable">
+          <mat-option *ngFor="let n of nums" [value]="n">{{ n }} &times; {{ n }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-stroked-button (click)="generateBoard()">Regenerate</button>
+      <button mat-flat-button color="primary" (click)="print()">Print</button>
+    </div>
+    <p class="instructions">
+      Each square on the board holds a product. On your turn, roll two dice, multiply them,
+      then draw a line beside any square showing that product. Close a square to claim it.
+      Most squares at the end wins.
+    </p>
+  </div>
+
+  <div class="board-wrapper" aria-label="Game board">
+    <div class="board-header print-only">
+      <span class="board-title">Multiplication Squares</span>
+      <span class="board-range">{{ maxTable.value }} &times; {{ maxTable.value }}</span>
+    </div>
+
+    <div class="board-grid">
+      @for (cell of grid; track $index) {
+        <div [class]="cell.type">
+          @if (cell.type === 'number') {
+            {{ cell.value }}
+          }
+        </div>
+      }
+    </div>
+
+    <div class="score-area print-only">
+      <div class="score-label">Players</div>
+      <div class="score-players">
+        @for (n of [1, 2, 3, 4]; track n) {
+          <div class="score-player">
+            <div class="name-line"></div>
+            <div class="score-box"></div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="content-section no-print">
+    <p>To play on paper, you need two standard dice, one printed sheet per group, and something to draw with. Colored pencils work well, one color per player so captures are easy to count at the end.</p>
+    <p>The rules are the same as the browser version. Roll both dice, multiply them, find a square on the board with that product, and draw a line on one of its sides. Close all four sides of a square and you capture it. Most squares wins.</p>
+
+    <h2>Picking the right table size</h2>
+    <p>Start with 4&times;4 or 6&times;6 if your students are still shaky on their basic facts. Products stay small, the game moves quickly, and there's less frustration. 10&times;10 or 12&times;12 is better for students who have their facts mostly down but need the harder ones to stick. The game also gets more strategic at larger sizes. Students start thinking about blocking, not just claiming, which helps with engagement past the first few rounds.</p>
+
+    <h2>Why not just use a PDF?</h2>
+    <p>A fixed board means the same layout every game. Students who've played it a few times start to recognize where the useful squares tend to cluster. This generator randomizes the board each time, so that advantage disappears. You can also dial the difficulty up or down between sessions, or print different versions for different groups at the same time.</p>
+    <p>If you'd rather skip the paper entirely, the <a routerLink="/">browser version</a> runs the same game in a tab. No printing, no pencils, nothing to collect at the end.</p>
+  </div>
+
+</div>

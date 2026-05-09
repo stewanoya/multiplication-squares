@@ -37,6 +37,14 @@ const FAQ_ITEMS = [
     answer: 'Yes. The game is accessible from any device with a browser. No school network or account is required.'
   },
   {
+    question: 'Is there a printable version?',
+    answer: 'Yes. Go to the print page, choose your times table range (4x4 up to 12x12), and print. Hit Regenerate first if you want a different layout — the board randomizes each time, so you can reuse it across multiple sessions without students seeing the same setup twice.'
+  },
+  {
+    question: 'What do I need to play the printed version?',
+    answer: 'Two dice, one printed sheet per group, and colored pencils or markers. One color per player so it\'s easy to count squares at the end.'
+  },
+  {
     question: 'How is this different from printed versions of Multiplication Squares?',
     answer: 'Printed versions require finding the file, printing it, and distributing physical copies. This version opens in a browser tab in seconds — no prep time, no printing costs, and nothing to collect or hand back.'
   },

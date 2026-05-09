@@ -6,16 +6,21 @@
       No printing, no prep, no download. Free for classrooms.
     </p>
 
-    <img src="assets/og-image.png" alt="Multiplication Squares game board showing a grid of numbers with colored squares captured by players" class="hero-image" />
+    <img src="assets/game-screenshot.png" alt="Multiplication Squares game in progress — four players, colored squares captured on the board, dice panel and live scores on the right" class="hero-image" />
 
     <p class="teacher-pitch">
       Set up in seconds. Up to 4 players. Students roll dice, multiply the numbers,
       and race to capture the most squares on the board. Works for Grades 1–8.
     </p>
 
-    <button mat-flat-button color="primary" class="cta-button" (click)="play()">
-      Play Now
-    </button>
+    <div class="cta-row">
+      <button mat-flat-button color="primary" class="cta-button" (click)="play()">
+        Play Now
+      </button>
+      <a mat-stroked-button routerLink="/print" class="print-button">
+        Print a Board
+      </a>
+    </div>
   </section>
 
   <section class="benefits">

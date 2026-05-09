@@ -6,6 +6,7 @@ import { SegmentComponent } from '../segment/segment.component';
 import { LineSegment } from '../../models/line-segment.model';
 import { Colors, SegmentOrientation } from '../../models/consts.model';
 import { PlayerService } from '../../services/player.service';
+import { SeoService } from '../../services/seo.service';
 import { DiceComponent } from '../dice/dice.component';
 
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
@@ -67,10 +68,17 @@ export class BoardComponent implements OnInit {
   constructor(
     private _snackbar: MatSnackBar,
     private _dialog: MatDialog,
-    private _players: PlayerService) {
+    private _players: PlayerService,
+    private _seo: SeoService) {
   }
 
   ngOnInit(): void {
+    this._seo.set({
+      title: 'Play Multiplication Squares — Free Browser Math Game',
+      description: 'Free multiplication squares game. Pick your players, pick a times table, and you\'re playing. Runs in any browser, nothing to set up.',
+      canonical: 'https://m-squares.anoya.ca/play',
+    });
+
     const ref = this._dialog.open(NewGameFormComponent, {
       disableClose: true,
       width: '90%',
