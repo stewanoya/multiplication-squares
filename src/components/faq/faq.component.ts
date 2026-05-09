@@ -26,7 +26,7 @@ const FAQ_ITEMS = [
   },
   {
     question: 'Is it free?',
-    answer: 'Yes, completely free. No subscription, no premium version, no cost.'
+    answer: 'Yes. No subscription, no premium tier, no catch.'
   },
   {
     question: 'How do you play Multiplication Squares?',
@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
   },
   {
     question: 'How do I reset for a new round?',
-    answer: 'There is a reset option in the game. You can start a fresh round without reloading the page.'
+    answer: 'Hit the reset button in the game. New round, no reload needed.'
   }
 ];
 
