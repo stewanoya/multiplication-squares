@@ -1,31 +1,79 @@
 <div class="print-page">
 
   <div class="controls no-print">
-    <h1>Multiplication Squares — Printable Game Board</h1>
-    <p class="subtitle">Pick your max times table, generate a board, and print it for class.</p>
+    <h1>Math Squares — Printable Game Board</h1>
+    <p class="subtitle">Pick a game and level, generate a fresh board, and print it for your class.</p>
     <div class="controls-row">
       <mat-form-field appearance="outline">
-        <mat-label>Max times table</mat-label>
-        <mat-select [formControl]="maxTable">
-          <mat-option *ngFor="let n of nums" [value]="n">{{ n }} &times; {{ n }}</mat-option>
+        <mat-label>Game</mat-label>
+        <mat-select [formControl]="variantCtrl" [compareWith]="compareVariants">
+          <mat-option *ngFor="let v of variantList" [value]="v">{{ v.icon }} {{ v.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" *ngIf="!mixed || selectedVariant.id === 'multiplication'">
+        <mat-label>{{ mixed ? 'Up to' : 'Level' }}</mat-label>
+        <mat-select [(value)]="selectedBase" [compareWith]="compareDifficulties" (selectionChange)="onDifficultyChange()">
+          <mat-option *ngFor="let d of baseDifficulties" [value]="d">{{ d.label }}</mat-option>
         </mat-select>
       </mat-form-field>
       <button mat-stroked-button (click)="generateBoard()">Regenerate</button>
       <button mat-flat-button color="primary" (click)="print()">Print</button>
     </div>
-    <p class="instructions">
-      Each square on the board holds a product. On your turn, roll two dice, multiply them,
-      then draw a line beside any square showing that product. Close a square to claim it.
-      Most squares at the end wins.
+    <div class="toggle-row-inline" *ngIf="selectedVariant.supportsMixed || selectedVariant.supportsUpTo12">
+      <label class="toggle-item" *ngIf="selectedVariant.supportsMixed">
+        <input type="checkbox" [checked]="mixed" (change)="mixed = !mixed; onDifficultyChange(); generateBoard()" />
+        Mixed
+        <span class="toggle-hint">Random numbers on both spinners</span>
+      </label>
+      <label class="toggle-item" *ngIf="selectedVariant.supportsUpTo12 && !mixed">
+        <input type="checkbox" [checked]="upTo12" (change)="upTo12 = !upTo12; onDifficultyChange(); generateBoard()" />
+        Up to 12
+        <span class="toggle-hint">Extends the spinner from 10 to 12</span>
+      </label>
+    </div>
+    <p class="instructions" *ngIf="currentDifficulty">
+      {{ selectedVariant.description }}
+    </p>
+  </div>
+
+  <div class="spinner-section print-only">
+    <div class="spinner-header">
+      <span class="spinner-game-title">{{ selectedVariant.label }} Squares</span>
+      <span class="spinner-level">{{ currentDifficulty?.label }}</span>
+    </div>
+    <div class="spinners-row">
+      <div class="spinner-wrap">
+        <svg viewBox="0 0 300 300" class="spinner-svg">
+          <g *ngFor="let seg of spinnerSegments(spinnerMax)">
+            <path [attr.d]="seg.path" fill="white" stroke="#333" stroke-width="1.5"/>
+            <text [attr.x]="seg.tx" [attr.y]="seg.ty"
+                  text-anchor="middle" dominant-baseline="middle"
+                  font-size="18" font-family="sans-serif" fill="#111">{{ seg.label }}</text>
+          </g>
+          <circle cx="150" cy="150" r="5" fill="#333"/>
+        </svg>
+        <p class="spinner-fixed-label" *ngIf="isSingleSpinner && currentDifficulty?.fixedLabel">
+          {{ currentDifficulty?.fixedLabel }}
+        </p>
+      </div>
+      <div class="spinner-wrap" *ngIf="!isSingleSpinner">
+        <svg viewBox="0 0 300 300" class="spinner-svg">
+          <g *ngFor="let seg of spinnerSegments(spinnerMax)">
+            <path [attr.d]="seg.path" fill="white" stroke="#333" stroke-width="1.5"/>
+            <text [attr.x]="seg.tx" [attr.y]="seg.ty"
+                  text-anchor="middle" dominant-baseline="middle"
+                  font-size="18" font-family="sans-serif" fill="#111">{{ seg.label }}</text>
+          </g>
+          <circle cx="150" cy="150" r="5" fill="#333"/>
+        </svg>
+      </div>
+    </div>
+    <p class="spinner-instructions">
+      Poke a pencil through a paperclip. Hold the pencil tip on the center dot and keep it still. Flick the paperclip — wherever it stops is your number.
     </p>
   </div>
 
   <div class="board-wrapper" aria-label="Game board">
-    <div class="board-header print-only">
-      <span class="board-title">Multiplication Squares</span>
-      <span class="board-range">{{ maxTable.value }} &times; {{ maxTable.value }}</span>
-    </div>
-
     <div class="board-grid">
       @for (cell of grid; track $index) {
         <div [class]="cell.type">
@@ -35,30 +83,22 @@
         </div>
       }
     </div>
-
-    <div class="score-area print-only">
-      <div class="score-label">Players</div>
-      <div class="score-players">
-        @for (n of [1, 2, 3, 4]; track n) {
-          <div class="score-player">
-            <div class="name-line"></div>
-            <div class="score-box"></div>
-          </div>
-        }
-      </div>
-    </div>
   </div>
 
   <div class="content-section no-print">
-    <p>To play on paper, you need two standard dice, one printed sheet per group, and something to draw with. Colored pencils work well, one color per player so captures are easy to count at the end.</p>
-    <p>The rules are the same as the browser version. Roll both dice, multiply them, find a square on the board with that product, and draw a line on one of its sides. Close all four sides of a square and you capture it. Most squares wins.</p>
+    <h2>How levels work</h2>
+    <p>Levels come in two types: fact family and mixed.</p>
+    <p>Fact family levels (× 8, + 5, − 3, ÷ 4) lock one number in and let the spinner handle the other. × 8 means spin any number and multiply by 8. + 5 means spin and add 5. One thing to practice, every roll.</p>
+    <p>Mixed levels use two spinners. Both numbers are random. Mixed (1–6 × 1–6) means both dice land anywhere from 1 to 6.</p>
+    <p>Division is the odd one out. The spinner shows the answer, not the starting number. Students see a value on the board and figure out what divided by the fixed number gives them that.</p>
 
-    <h2>Picking the right table size</h2>
-    <p>Start with 4&times;4 or 6&times;6 if your students are still shaky on their basic facts. Products stay small, the game moves quickly, and there's less frustration. 10&times;10 or 12&times;12 is better for students who have their facts mostly down but need the harder ones to stick. The game also gets more strategic at larger sizes. Students start thinking about blocking, not just claiming, which helps with engagement past the first few rounds.</p>
+    <h2>How to play on paper</h2>
+    <p>To play on paper, you need a spinner or dice, one printed sheet per group, and something to draw with. Colored pencils work well — one color per player makes it easy to count captures at the end.</p>
+    <p>On your turn, spin or roll to get a number. Solve the math problem, find a square on the board with that answer, and draw a line on one of its sides. Close all four sides of a square to capture it. Most squares wins.</p>
 
-    <h2>Why not just use a PDF?</h2>
-    <p>A fixed board means the same layout every game. Students who've played it a few times start to recognize where the useful squares tend to cluster. This generator randomizes the board each time, so that advantage disappears. You can also dial the difficulty up or down between sessions, or print different versions for different groups at the same time.</p>
-    <p>If you'd rather skip the paper entirely, the <a routerLink="/">browser version</a> runs the same game in a tab. No printing, no pencils, nothing to collect at the end.</p>
+    <h2>Why a random board every time?</h2>
+    <p>A fixed board lets students memorize where the good squares are. This generator randomizes the layout each print, so every game feels fresh. You can also swap levels between sessions to match where your students are at — or print different levels for different groups at the same time.</p>
+    <p>If you'd rather skip the paper entirely, the <a routerLink="/">browser version</a> runs the same games with no printing or prep needed.</p>
   </div>
 
 </div>

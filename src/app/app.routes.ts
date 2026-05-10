@@ -7,8 +7,10 @@ import { PrintableComponent } from '../components/printable/printable.component'
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
-  { path: 'play', component: BoardComponent, data: { prerender: false } },
-  { path: 'print', component: PrintableComponent },
+  { path: 'play/:variant', component: BoardComponent, data: { prerender: false } },
+  { path: 'play', redirectTo: '', pathMatch: 'full' },
+  { path: 'print/:variant', component: PrintableComponent },
+  { path: 'print', redirectTo: 'print/multiplication', pathMatch: 'full' },
   { path: 'about', component: AboutComponent },
   { path: 'faq', component: FaqComponent },
   { path: '**', redirectTo: '' }

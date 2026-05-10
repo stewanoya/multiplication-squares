@@ -1,5 +1,5 @@
 .landing-container {
-  max-width: 800px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
 }
@@ -61,6 +61,96 @@
   padding: 0.75rem 2rem;
   color: #673ab7 !important;
   border-color: #673ab7 !important;
+}
+
+.section-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.games-section {
+  padding: 1rem 0 2rem;
+}
+
+.game-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  &__icon {
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    color: #fff;
+    background: #9e9e9e;
+  }
+
+  &__body {
+    padding: 1rem;
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+  }
+
+  &__grade {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0 0 0.5rem;
+  }
+
+  &__desc {
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &__actions {
+    padding: 0.75rem 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &--soon {
+    opacity: 0.6;
+  }
+}
+
+// Per-game accent colors (active games in order: multiplication, addition, subtraction, division)
+.game-cards .game-card:nth-child(1) .game-card__icon { background: #673ab7; }
+.game-cards .game-card:nth-child(2) .game-card__icon { background: #2e7d32; }
+.game-cards .game-card:nth-child(3) .game-card__icon { background: #e65100; }
+.game-cards .game-card:nth-child(4) .game-card__icon { background: #1565c0; }
+
+.coming-soon-badge {
+  display: inline-block;
+  background: #9e9e9e;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .benefits {

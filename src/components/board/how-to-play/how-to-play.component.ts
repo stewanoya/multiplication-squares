@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { VariantConfig } from '../../../models/variant.model';
 
 @Component({
   selector: 'app-how-to-play',
@@ -11,6 +12,8 @@ import { MatDividerModule } from '@angular/material/divider';
   styleUrl: './how-to-play.component.scss'
 })
 export class HowToPlayComponent {
-  constructor(public dialogRef: MatDialogRef<HowToPlayComponent>) {}
-
+  constructor(
+    public dialogRef: MatDialogRef<HowToPlayComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { variant: VariantConfig }
+  ) {}
 }

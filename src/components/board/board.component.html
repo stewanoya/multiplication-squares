@@ -1,12 +1,12 @@
 <app-celebration [visible]="celebrationVisible" [message]="celebrationMessage" />
 
-<p class="page-description">
-  Multiplication Squares is a free browser-based math game for classrooms. Players roll dice, multiply the numbers, and race to capture squares on the board. No printing or prep required. Great for Grades 3–8.
+<p class="page-description" *ngIf="variant">
+  {{ variant.label }} Squares &mdash; {{ variant.gradeRange }}
 </p>
 
 <div *ngIf="game" class="game__container">
   <mat-card class="board__container">
-    <h1 class="board-title">Multiplication Squares</h1>
+    <h1 class="board-title">{{ variant?.label }} Squares</h1>
     <div class="board-wrapper">
       <div *ngFor="let row of game.currentBoard; let rowIndex = index;" class="board-row">
         <div [style.background-color]="cell.fillColor"

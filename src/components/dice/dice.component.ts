@@ -47,12 +47,51 @@ export class DiceComponent implements OnInit {
   isRolling = false;
   diceMode: DiceMode = (localStorage.getItem('diceMode') as DiceMode) ?? 'number';
 
+  // raw die values (before any display transform)
+  die1Raw: number | null = null;
+  die2Raw: number | null = null;
+
+  get isSingleSpinner(): boolean {
+    return (this.game?.difficulty?.spinnerCount ?? 2) === 1;
+  }
+
+  get fixedLabel(): string {
+    return this.game?.difficulty?.fixedLabel ?? '×';
+  }
+
+  get die1Display(): number | null {
+    if (this.die1Raw === null) return null;
+    const transform = this.game?.difficulty?.die1DisplayTransform;
+    return transform ? transform(this.die1Raw) : this.die1Raw;
+  }
+
+  get dualOperator(): string {
+    return this.game?.difficulty?.dualOperator ?? '×';
+  }
+
+  get isResultReady(): boolean {
+    return (this.game?.currentResult ?? -1) !== -1;
+  }
+
   ngOnInit(): void {
-    this.firstDie = new DieModel(this.game!.maxValue as number);
-    this.secondDie = new DieModel(this.game!.maxValue as number);
-    this.firstDie.value
-      .pipe(combineLatestWith(this.secondDie.value))
-      .subscribe((vals) => this.diceValuesEvent.emit(vals));
+    const max = this.game!.maxValue;
+    this.firstDie = new DieModel(max);
+
+    if (this.isSingleSpinner) {
+      this.firstDie.value.subscribe((v1) => {
+        this.die1Raw = v1;
+        this.diceValuesEvent.emit([v1]);
+      });
+    } else {
+      this.secondDie = new DieModel(max);
+      this.firstDie.value
+        .pipe(combineLatestWith(this.secondDie.value))
+        .subscribe(([v1, v2]) => {
+          this.die1Raw = v1;
+          this.die2Raw = v2;
+          this.diceValuesEvent.emit([v1, v2]);
+        });
+    }
   }
 
   getPipPositions(value: number | null): PipPosition[] {
@@ -80,7 +119,9 @@ export class DiceComponent implements OnInit {
   onRollClick() {
     this.isRolling = true;
     this.firstDie!.start$.next(this.game!.maxValue);
-    this.secondDie!.start$.next(this.game!.maxValue);
+    if (!this.isSingleSpinner) {
+      this.secondDie!.start$.next(this.game!.maxValue);
+    }
     this.diceRolledEvent.emit();
     setTimeout(() => { this.isRolling = false; }, 550);
   }

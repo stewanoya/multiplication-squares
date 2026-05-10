@@ -6,7 +6,15 @@
       "WebSearch",
       "WebFetch(domain:m-squares.anoya.ca)",
       "WebFetch(domain:www.games4gains.com)",
-      "Skill(humanizer)"
+      "Skill(humanizer)",
+      "WebFetch(domain:www.teacherspayteachers.com)",
+      "Bash(curl -s -L \"https://www.teacherspayteachers.com/Product/Addition-Games-12-Addition-Facts-Games-1955259\" -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" -H \"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\" -H \"Accept-Language: en-US,en;q=0.5\" --max-time 30)",
+      "Bash(Get-ChildItem -Path \"D:\\\\repos\\\\math-squares\" -Recurse -Force)",
+      "Bash(Select-Object -First 100)",
+      "Bash(Format-Table FullName)",
+      "Bash(Get-ChildItem -Path D:\\\\repos\\\\math-squares -Force)",
+      "Bash(Select-Object Name, Mode)",
+      "Bash(Get-ChildItem *)"
     ]
   }
 }

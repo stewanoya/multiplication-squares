@@ -1,65 +1,75 @@
 <div class="landing-container">
   <section class="hero">
-    <h1>Multiplication Squares: Free Online Math Game</h1>
-    <p class="tagline">
-      The classic dots-and-boxes multiplication game, played directly in your browser.
-      No printing, no prep, no download. Free for classrooms.
-    </p>
+    <h1>Math Squares Games</h1>
+    <p class="tagline">Dots-and-boxes with math. Runs in any browser. Free.</p>
+  </section>
 
-    <img src="assets/game-screenshot.png" alt="Multiplication Squares game in progress — four players, colored squares captured on the board, dice panel and live scores on the right" class="hero-image" />
+  <section class="games-section">
+    <h2 class="section-heading">Pick a game</h2>
+    <div class="game-cards">
+      <div class="game-card" *ngFor="let game of activeGames">
+        <div class="game-card__icon">{{ game.icon }}</div>
+        <div class="game-card__body">
+          <h3 class="game-card__title">{{ game.label }} Squares</h3>
+          <p class="game-card__grade">{{ game.gradeRange }}</p>
+          <p class="game-card__desc">{{ game.description }}</p>
+        </div>
+        <div class="game-card__actions">
+          <button mat-flat-button color="primary" (click)="play(game.id)">Play</button>
+          <a mat-stroked-button [routerLink]="['/print', game.id]">Print Board</a>
+        </div>
+      </div>
 
-    <p class="teacher-pitch">
-      Set up in seconds. Up to 4 players. Students roll dice, multiply the numbers,
-      and race to capture the most squares on the board. Works for Grades 3–8.
-    </p>
-
-    <div class="cta-row">
-      <button mat-flat-button color="primary" class="cta-button" (click)="play()">
-        Play Now
-      </button>
-      <a mat-stroked-button routerLink="/print" class="print-button">
-        Print a Board
-      </a>
+      <div class="game-card game-card--soon" *ngFor="let game of comingSoonGames">
+        <div class="game-card__icon">{{ game.icon }}</div>
+        <div class="game-card__body">
+          <h3 class="game-card__title">{{ game.label }} Squares</h3>
+          <p class="game-card__grade">{{ game.gradeRange }}</p>
+          <p class="game-card__desc">Coming soon!</p>
+        </div>
+        <div class="game-card__actions">
+          <span class="coming-soon-badge">Coming Soon</span>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="benefits">
-    <h2 class="section-heading">Why It Works in Classrooms</h2>
+    <h2 class="section-heading">Why it works in class</h2>
     <div class="benefit-cards">
       <div class="benefit-card">
         <span class="material-icons">trending_up</span>
-        <h3>Times Tables Practice That Doesn't Feel Like Practice</h3>
-        <p>Students hunt for products on the board by rolling dice and multiplying. They're drilling times tables the whole time. It just doesn't feel like it.</p>
+        <h3>The math is the game</h3>
+        <p>Students are solving math facts on every turn. They're just too busy trying to win to notice.</p>
       </div>
       <div class="benefit-card">
         <span class="material-icons">psychology</span>
-        <h3>There's Actually Strategy Involved</h3>
-        <p>It's not just about knowing your times tables. Players have to think about which squares to go for, when to block, and how to plan ahead. The math practice happens on the way.</p>
+        <h3>There's real strategy</h3>
+        <p>Knowing the answer is only part of it. Players also have to decide which square to take, what to block, and whether to play it safe or go for it.</p>
       </div>
       <div class="benefit-card">
         <span class="material-icons">bolt</span>
-        <h3>No Prep. No Printing. Open and Play.</h3>
-        <p>Every other version of this game requires printed worksheets. This one runs in a browser tab. Open it in class, pick your players, and you're playing in under a minute.</p>
+        <h3>Open it and play</h3>
+        <p>Works in any browser. Add your players, pick a game, and you're playing in under a minute.</p>
       </div>
       <div class="benefit-card">
         <span class="material-icons">groups</span>
-        <h3>Works in Any Classroom Setting</h3>
-        <p>2 to 4 players. Good for math centers, partner work, or filling the last 10 minutes of class. Board size adjusts from 6x6 up to 12x12 to match your grade level.</p>
+        <h3>Flexible for any class format</h3>
+        <p>2 to 4 players. Works for partner work, small groups, or a few spare minutes at the end of class. Each game has multiple levels.</p>
       </div>
     </div>
   </section>
 
   <section class="how-to-play">
-    <h2>How to Play</h2>
+    <h2>How to play</h2>
     <ol>
-      <li>Write your names and pick a color for each player</li>
-      <li>Roll the dice</li>
-      <li>Pick a side of a number that equals the first die multiplied by the second die. For example: if you roll 3 and 2, you can draw a line beside any 6 square, since 3 x 2 = 6</li>
-      <li>If you draw the line that creates a square around a number, that number is filled in with your color, and you score a point.</li>
-      <li>If the number you're looking for isn't available, you have to skip your turn.</li>
-      <li>Play until there are no options left for any players. Highest score wins!</li>
-      <li>If you want to play again, reset the game.</li>
+      <li>Choose a game and a level.</li>
+      <li>Add your players and give each one a color.</li>
+      <li>Spin the spinner.</li>
+      <li>Find a square on the board with your answer and draw a line on one of its sides.</li>
+      <li>Draw the last side of a square and you capture it.</li>
+      <li>No match? Skip your turn.</li>
+      <li>Play until the board fills up. Most squares wins.</li>
     </ol>
-
   </section>
 </div>

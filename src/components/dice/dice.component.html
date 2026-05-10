@@ -1,17 +1,18 @@
-<div *ngIf="firstDie && secondDie" class="dice-section__container">
+<div *ngIf="firstDie" class="dice-section__container">
 
   <div class="dice-header">
-    <h3 class="dice-title">Roll the Dice</h3>
-    <button class="mode-toggle" (click)="toggleDiceMode()" type="button">
+    <h3 class="dice-title">Spin the Spinner</h3>
+    <button class="mode-toggle" (click)="toggleDiceMode()" type="button" *ngIf="!isSingleSpinner">
       {{ diceMode === 'number' ? 'Pip view' : 'Number view' }}
     </button>
   </div>
 
   <div class="dice-row">
+    <!-- Die 1 -->
     <ng-container *ngIf="firstDie.rolling$ | async as v1; else emptyDie1">
       <div class="die" [class.die--rolling]="isRolling">
-        <span *ngIf="diceMode === 'number'" class="die-number">{{ v1 }}</span>
-        <div *ngIf="diceMode === 'pip'"
+        <span *ngIf="diceMode === 'number' || isSingleSpinner" class="die-number">{{ die1Display ?? v1 }}</span>
+        <div *ngIf="diceMode === 'pip' && !isSingleSpinner"
              class="pip-grid"
              [style.grid-template-rows]="'repeat(' + pipGridRows(v1) + ', 1fr)'">
           <span *ngFor="let pip of getPipPositions(v1)"
@@ -28,32 +29,39 @@
       </div>
     </ng-template>
 
-    <span class="multiply-sign">&#215;</span>
-
-    <ng-container *ngIf="secondDie.rolling$ | async as v2; else emptyDie2">
-      <div class="die" [class.die--rolling]="isRolling">
-        <span *ngIf="diceMode === 'number'" class="die-number">{{ v2 }}</span>
-        <div *ngIf="diceMode === 'pip'"
-             class="pip-grid"
-             [style.grid-template-rows]="'repeat(' + pipGridRows(v2) + ', 1fr)'">
-          <span *ngFor="let pip of getPipPositions(v2)"
-                class="pip"
-                [style.grid-row]="pip.r"
-                [style.grid-column]="pip.c">
-          </span>
-        </div>
-      </div>
+    <!-- Fixed label (single spinner) or second die (dual spinner) -->
+    <ng-container *ngIf="isSingleSpinner; else dualDie">
+      <span class="multiply-sign">{{ fixedLabel }}</span>
     </ng-container>
-    <ng-template #emptyDie2>
-      <div class="die die--empty">
-        <span class="die-number die-number--placeholder">?</span>
-      </div>
+
+    <ng-template #dualDie>
+      <span class="multiply-sign">{{ dualOperator }}</span>
+
+      <ng-container *ngIf="secondDie && (secondDie.rolling$ | async) as v2; else emptyDie2">
+        <div class="die" [class.die--rolling]="isRolling">
+          <span *ngIf="diceMode === 'number'" class="die-number">{{ v2 }}</span>
+          <div *ngIf="diceMode === 'pip'"
+               class="pip-grid"
+               [style.grid-template-rows]="'repeat(' + pipGridRows(v2) + ', 1fr)'">
+            <span *ngFor="let pip of getPipPositions(v2)"
+                  class="pip"
+                  [style.grid-row]="pip.r"
+                  [style.grid-column]="pip.c">
+            </span>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #emptyDie2>
+        <div class="die die--empty">
+          <span class="die-number die-number--placeholder">?</span>
+        </div>
+      </ng-template>
     </ng-template>
   </div>
 
   <div class="dice-buttons">
     <button [disabled]="diceRolled" mat-flat-button color="accent" (click)="onRollClick()">Roll</button>
     <button [disabled]="!diceRolled" mat-button (click)="onDrawClick()">Draw it out</button>
-    <button [disabled]="game!.product === -1" mat-flat-button color="warn" (click)="onSkipTurnClick()">Skip Turn</button>
+    <button [disabled]="!isResultReady" mat-flat-button color="warn" (click)="onSkipTurnClick()">Skip Turn</button>
   </div>
 </div>

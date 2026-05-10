@@ -15,8 +15,8 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
     this.seo.set({
-      title: 'About Multiplication Squares — Free Browser-Based Math Game',
-      description: 'Learn how Multiplication Squares works, why it keeps students engaged, and how to use it in your classroom. Free, no prep, no account required.',
+      title: 'About Math Squares — Free browser-based math games for classrooms',
+      description: 'Math Squares is a free browser-based dots-and-boxes game for classrooms. Practice addition, subtraction, multiplication, and division — no account, no prep, no printing needed.',
       canonical: 'https://m-squares.anoya.ca/about'
     });
   }

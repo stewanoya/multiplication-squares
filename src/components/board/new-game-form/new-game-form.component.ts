@@ -1,21 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Colors } from '../../../models/consts.model';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HowToPlayComponent } from '../how-to-play/how-to-play.component';
-
-const ADJECTIVES = [
-  'Brave', 'Silly', 'Fuzzy', 'Bouncy', 'Sparkly', 'Fluffy', 'Wiggly', 'Zany',
-  'Cheerful', 'Clumsy', 'Daring', 'Goofy', 'Happy', 'Jazzy', 'Lucky', 'Mighty',
-  'Peppy', 'Speedy', 'Tiny', 'Wacky', 'Bold', 'Bubbly', 'Dizzy', 'Funky',
-  'Giggly', 'Jumpy', 'Playful', 'Sunny', 'Wobbly', 'Zippy', 'Fancy', 'Jolly',
-  'Snappy', 'Puffy', 'Rosy', 'Shiny', 'Grumpy', 'Sneaky', 'Cosmic', 'Tricky',
-];
+import { DifficultyLevel, VariantConfig } from '../../../models/variant.model';
 
 const ANIMALS = [
   'Panda', 'Tiger', 'Bunny', 'Penguin', 'Dolphin', 'Koala', 'Hedgehog', 'Llama',
@@ -24,7 +17,6 @@ const ANIMALS = [
   'Elephant', 'Giraffe', 'Hippo', 'Monkey', 'Zebra', 'Fox', 'Raccoon',
   'Squirrel', 'Hamster', 'Turtle', 'Frog', 'Owl', 'Eagle', 'Bear', 'Wolf',
 ];
-
 
 @Component({
   selector: 'app-new-game-form',
@@ -42,17 +34,61 @@ const ANIMALS = [
   styleUrl: './new-game-form.component.scss'
 })
 export class NewGameFormComponent {
+  variant: VariantConfig;
+  step = 0;
+  numPlayers = 0;
+  playerGroups: FormGroup[] = [];
+  difficulty = new FormControl<DifficultyLevel | null>(null);
+
+  selectedBase: DifficultyLevel | null = null;
+  mixed = false;
+  upTo12 = false;
+
   constructor(
     private _fb: FormBuilder,
     private _dialogRef: MatDialogRef<NewGameFormComponent>,
     private _dialog: MatDialog,
-  ) {}
+    @Inject(MAT_DIALOG_DATA) data: { variant: VariantConfig },
+  ) {
+    this.variant = data?.variant ?? { difficulties: [] } as any;
+    this.selectedBase = this.baseDifficulties[0] ?? null;
+    this.difficulty.setValue(this.resolvedDifficulty);
+  }
 
-  step = 0;
-  numPlayers = 0;
-  playerGroups: FormGroup[] = [];
-  max = new FormControl(6);
-  nums = [4, 5, 6, 7, 8, 9, 10, 11, 12];
+  get baseDifficulties(): DifficultyLevel[] {
+    return this.variant.difficulties.filter(d => !d.isUpTo12 && !d.isMixed);
+  }
+
+  get resolvedDifficulty(): DifficultyLevel | null {
+    const v = this.variant;
+    if (this.mixed && v.supportsMixed) {
+      if (v.id === 'multiplication') {
+        const n = this.selectedBase?.fixedOperand ?? 10;
+        return v.difficulties.find(d => !!d.isMixed && d.spinnerMax === n) ?? null;
+      }
+      return v.difficulties.find(d => !!d.isMixed) ?? null;
+    }
+    if (!this.selectedBase) return null;
+    const n = this.selectedBase.fixedOperand;
+    const wantUpTo12 = this.upTo12 && v.supportsUpTo12;
+    return v.difficulties.find(d => !d.isMixed && d.fixedOperand === n && !!d.isUpTo12 === wantUpTo12) ?? null;
+  }
+
+  get mixedHint(): string {
+    switch (this.variant.id) {
+      case 'multiplication': {
+        const n = this.selectedBase?.fixedOperand ?? 10;
+        return `Spin two spinners and multiply them together. Your biggest spin is ${n}.`;
+      }
+      case 'addition':    return 'Spin two spinners and add them together.';
+      case 'subtraction': return 'Spin two spinners and subtract one from the other.';
+      default:            return 'Spin two spinners.';
+    }
+  }
+
+  onDifficultyChange() {
+    this.difficulty.setValue(this.resolvedDifficulty);
+  }
 
   get colorChoices(): { key: string; hex: string }[] {
     return Object.entries(Colors)
@@ -100,18 +136,13 @@ export class NewGameFormComponent {
   choosePlayerCount(n: number) {
     this.numPlayers = n;
     this.playerGroups = Array.from({ length: n }, () =>
-      this._fb.group({
-        name: [''],
-        color: [''],
-      })
+      this._fb.group({ name: [''], color: [''] })
     );
     this.step = 1;
   }
 
   private randomName(): string {
-    const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
-    const animal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
-    return `${adj} ${animal}`;
+    return ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
   }
 
   next() {
@@ -129,8 +160,35 @@ export class NewGameFormComponent {
     if (this.step > 0) this.step--;
   }
 
+  get difficultyHint(): string {
+    const d = this.resolvedDifficulty;
+    if (!d) return '';
+    if (d.spinnerCount === 1 && d.fixedLabel) {
+      const op = d.fixedLabel.trim()[0];
+      const operand = d.fixedLabel.trim().slice(2).trim();
+      const verbs: Record<string, string> = {
+        '×': `Multiply what you get by ${operand}, then find that answer on the board.`,
+        '+': `Add ${operand} to your number, then find that answer on the board.`,
+        '−': `Subtract ${operand} from your number, then find that answer on the board.`,
+        '÷': `Divide your number by ${operand}, then find the answer on the board.`,
+      };
+      return `Spin once. ${verbs[op] ?? ''}`;
+    }
+    const op = d.dualOperator ?? '×';
+    const verbs: Record<string, string> = {
+      '×': 'Multiply the two numbers together, then find that answer on the board.',
+      '+': 'Add the two numbers together, then find that answer on the board.',
+      '−': 'Subtract the smaller from the larger, then find that answer on the board.',
+    };
+    return `Two spins. ${verbs[op] ?? ''}`;
+  }
+
+  compareById(a: DifficultyLevel, b: DifficultyLevel): boolean {
+    return a?.id === b?.id;
+  }
+
   onHowToPlayClick() {
-    this._dialog.open(HowToPlayComponent, { width: '80%', height: '80%' });
+    this._dialog.open(HowToPlayComponent, { width: '80%', height: '80%', data: { variant: this.variant } });
   }
 
   startGame() {
@@ -140,7 +198,7 @@ export class NewGameFormComponent {
       return;
     }
     this._dialogRef.close({
-      max: this.max.value,
+      difficulty: this.difficulty.value,
       players: this.playerGroups.map(g => g.value),
     });
   }

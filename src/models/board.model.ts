@@ -1,44 +1,40 @@
 import { NumberCellModel } from "./number-cell.model";
 import { PlayerModel } from "./player.model";
+import { DifficultyLevel } from "./variant.model";
 
 export class BoardModel {
   currentBoard: NumberCellModel[][] = [];
-  flatMultiplicationValues: number[] = [];
-  product: number = -1;
-  maxValue: number
+  boardValues: number[] = [];
+  currentResult: number = -1;
   die1Value: number = 0;
   die2Value: number = 0;
   currentPlayerTurn: PlayerModel;
   players: PlayerModel[] = [];
+  difficulty: DifficultyLevel;
 
-  constructor(maxTable: number, players: PlayerModel[]) {
-    this.maxValue = maxTable;
+  // Kept for backward compat with dice component maxValue reads
+  get maxValue(): number {
+    return this.difficulty.spinnerMax;
+  }
+
+  constructor(difficulty: DifficultyLevel, players: PlayerModel[]) {
+    this.difficulty = difficulty;
     this.players = players;
     this.currentPlayerTurn = players[0];
-    this.flatMultiplicationValues = this.generateMultipicationTableValues(maxTable);
+    this.boardValues = difficulty.boardValues();
     this.generateBoard();
   }
 
   generateBoard() {
+    this.currentBoard = [];
     for (let i = 0; i < 10; i++) {
       const row: NumberCellModel[] = [];
       for (let j = 0; j < 10; j++) {
-        const randomValue = this.flatMultiplicationValues[Math.floor(Math.random() * this.flatMultiplicationValues.length)];
-        row.push(new NumberCellModel(j, randomValue, i));
+        const val = this.boardValues[Math.floor(Math.random() * this.boardValues.length)];
+        row.push(new NumberCellModel(j, val, i));
       }
       this.currentBoard.push(row);
     }
-  }
-
-  generateMultipicationTableValues(maxTable: number) {
-    const values = [];
-    for (let i = 1; i <= maxTable; i++) {
-      for (let j = 1; j <= maxTable; j++) {
-        values.push(i * j);
-      }
-    }
-
-    return [...new Set(values)];
   }
 
   updateScore() {
@@ -49,18 +45,12 @@ export class BoardModel {
 
   nextTurn() {
     const index = this.players.indexOf(this.currentPlayerTurn);
-
-    if (index === this.players.length - 1) {
-      this.currentPlayerTurn = this.players[0];
-    } else {
-      this.currentPlayerTurn = this.players[index + 1];
-    }
+    this.currentPlayerTurn = this.players[(index + 1) % this.players.length];
   }
 
-  updateProduct(num1: number, num2: number) {
-    this.die1Value = num1;
-    this.die2Value = num2;
-    this.product = num1 * num2;
+  updateResult(die1: number, die2?: number) {
+    this.die1Value = die1;
+    this.die2Value = die2 ?? 0;
+    this.currentResult = this.difficulty.computeResult(die1, die2);
   }
-
 }

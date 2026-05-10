@@ -57,16 +57,36 @@
     </div>
   </ng-container>
 
-  <!-- Last step: Times table -->
+  <!-- Last step: Choose difficulty -->
   <div *ngIf="isTableStep" class="step-content step-table">
-    <h1 class="modal-title">Times Tables</h1>
-    <p class="step-question">What's the highest number to multiply with?</p>
-    <mat-form-field class="max-table" appearance="outline">
-      <mat-label>Max times table</mat-label>
-      <mat-select [formControl]="max">
-        <mat-option *ngFor="let num of nums" [value]="num">{{ num }}</mat-option>
+    <h1 class="modal-title">{{ variant.icon }} {{ variant.label }} Squares</h1>
+    <p class="step-question">Pick a level to practice:</p>
+
+    <mat-form-field class="max-table" appearance="outline" *ngIf="!mixed || variant.id === 'multiplication'">
+      <mat-label>{{ mixed ? 'Up to' : 'Level' }}</mat-label>
+      <mat-select [(value)]="selectedBase" [compareWith]="compareById" (selectionChange)="onDifficultyChange()">
+        <mat-option *ngFor="let d of baseDifficulties" [value]="d">{{ d.label }}</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <div class="difficulty-toggles" *ngIf="variant.supportsMixed || variant.supportsUpTo12">
+      <label class="toggle-row" *ngIf="variant.supportsMixed">
+        <input type="checkbox" [checked]="mixed" (change)="mixed = !mixed; onDifficultyChange()" />
+        <span class="toggle-text">
+          Mixed
+          <span class="toggle-hint">{{ mixedHint }}</span>
+        </span>
+      </label>
+      <label class="toggle-row" *ngIf="variant.supportsUpTo12 && !mixed">
+        <input type="checkbox" [checked]="upTo12" (change)="upTo12 = !upTo12; onDifficultyChange()" />
+        <span class="toggle-text">
+          Up to 12
+          <span class="toggle-hint">Bigger numbers. Spinner goes to 12.</span>
+        </span>
+      </label>
+    </div>
+
+    <p class="difficulty-hint" *ngIf="difficultyHint">{{ difficultyHint }}</p>
     <div class="step-actions">
       <button class="btn-back" (click)="back()" type="button">Back</button>
       <button class="btn-start" (click)="startGame()" type="button">Let's Play!</button>
