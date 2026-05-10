@@ -18,7 +18,7 @@ export class AdInterstitialComponent implements AfterViewInit, OnDestroy {
   countdown = AD_DURATION;
   private sub?: Subscription;
   private mutationObserver?: MutationObserver;
-  private resizeObserver?: ResizeObserver;
+  private adTimer?: ReturnType<typeof setTimeout>;
   private fallbackTimer?: ReturnType<typeof setTimeout>;
 
   @ViewChild('adSlot') adSlot!: ElementRef<HTMLElement>;
@@ -27,41 +27,36 @@ export class AdInterstitialComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (!isDevMode()) {
-      const ins = this.adSlot.nativeElement;
-      // Wait until the element has a real width (dialog animation may defer layout)
-      this.resizeObserver = new ResizeObserver((entries) => {
-        const width = entries[0]?.contentRect.width;
-        if (width && width > 0) {
-          this.resizeObserver!.disconnect();
-          this.resizeObserver = undefined;
-          this.pushAd(ins);
+      // Wait for dialog open animation (~225ms) so the ins element has real dimensions
+      this.adTimer = setTimeout(() => {
+        const ins = this.adSlot?.nativeElement;
+        if (!ins) {
+          this.startCountdown();
+          return;
         }
-      });
-      this.resizeObserver.observe(ins);
+
+        this.mutationObserver = new MutationObserver(() => {
+          if (ins.getAttribute('data-ad-status')) {
+            this.cleanupAdWatcher();
+            this.startCountdown();
+          }
+        });
+        this.mutationObserver.observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
+
+        // Fallback: start countdown if ad never resolves (ad blocker, no fill, etc.)
+        this.fallbackTimer = setTimeout(() => {
+          this.cleanupAdWatcher();
+          this.startCountdown();
+        }, 3000);
+
+        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+      }, 300);
     } else {
       this.startCountdown();
     }
   }
 
-  private pushAd(ins: HTMLElement) {
-    this.mutationObserver = new MutationObserver(() => {
-      if (ins.getAttribute('data-ad-status')) {
-        this.cleanupTimers();
-        this.startCountdown();
-      }
-    });
-    this.mutationObserver.observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
-
-    // Fallback: start countdown if ad never fires (ad blocker, no fill, etc.)
-    this.fallbackTimer = setTimeout(() => {
-      this.cleanupTimers();
-      this.startCountdown();
-    }, 3000);
-
-    ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-  }
-
-  private cleanupTimers() {
+  private cleanupAdWatcher() {
     this.mutationObserver?.disconnect();
     this.mutationObserver = undefined;
     if (this.fallbackTimer !== undefined) {
@@ -79,8 +74,8 @@ export class AdInterstitialComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-    this.resizeObserver?.disconnect();
-    this.cleanupTimers();
+    if (this.adTimer !== undefined) clearTimeout(this.adTimer);
+    this.cleanupAdWatcher();
   }
 
   get canContinue(): boolean {
