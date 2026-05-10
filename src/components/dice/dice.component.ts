@@ -4,8 +4,10 @@ import { BoardModel } from '../../models/board.model';
 import { DieModel } from '../../models/die.model';
 import { combineLatestWith } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { SpinnerWheelComponent } from './spinner-wheel/spinner-wheel.component';
 
 type DiceMode = 'number' | 'pip';
+type ViewMode = 'dice' | 'spinner';
 
 interface PipPosition {
   r: number;
@@ -30,7 +32,7 @@ const PIP_POSITIONS: { [key: number]: PipPosition[] } = {
 @Component({
   selector: 'dice',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, SpinnerWheelComponent],
   templateUrl: './dice.component.html',
   styleUrl: './dice.component.scss'
 })
@@ -46,6 +48,9 @@ export class DiceComponent implements OnInit {
   secondDie: DieModel | undefined;
   isRolling = false;
   diceMode: DiceMode = (localStorage.getItem('diceMode') as DiceMode) ?? 'number';
+  viewMode: ViewMode = (localStorage.getItem('viewMode') as ViewMode) ?? 'dice';
+  spinner1Target: number | null = null;
+  spinner2Target: number | null = null;
 
   // raw die values (before any display transform)
   die1Raw: number | null = null;
@@ -71,6 +76,14 @@ export class DiceComponent implements OnInit {
 
   get isResultReady(): boolean {
     return (this.game?.currentResult ?? -1) !== -1;
+  }
+
+  get sectionTitle(): string {
+    return this.viewMode === 'dice' ? 'Roll the Dice' : 'Spin the Spinner';
+  }
+
+  get rollButtonLabel(): string {
+    return this.viewMode === 'dice' ? 'Roll' : 'Spin';
   }
 
   ngOnInit(): void {
@@ -108,6 +121,13 @@ export class DiceComponent implements OnInit {
     localStorage.setItem('diceMode', this.diceMode);
   }
 
+  toggleViewMode() {
+    this.viewMode = this.viewMode === 'dice' ? 'spinner' : 'dice';
+    localStorage.setItem('viewMode', this.viewMode);
+    this.spinner1Target = null;
+    this.spinner2Target = null;
+  }
+
   onDrawClick() {
     this.onDrawEvent.emit();
   }
@@ -117,12 +137,23 @@ export class DiceComponent implements OnInit {
   }
 
   onRollClick() {
-    this.isRolling = true;
-    this.firstDie!.start$.next(this.game!.maxValue);
-    if (!this.isSingleSpinner) {
-      this.secondDie!.start$.next(this.game!.maxValue);
-    }
     this.diceRolledEvent.emit();
-    setTimeout(() => { this.isRolling = false; }, 550);
+
+    if (this.viewMode === 'spinner') {
+      const v1 = Math.floor(Math.random() * this.game!.maxValue) + 1;
+      const v2 = this.isSingleSpinner ? null : Math.floor(Math.random() * this.game!.maxValue) + 1;
+      this.spinner1Target = v1;
+      this.spinner2Target = v2;
+      setTimeout(() => {
+        this.die1Raw = v1;
+        this.die2Raw = v2;
+        this.diceValuesEvent.emit(v2 !== null ? [v1, v2] : [v1]);
+      }, 2000);
+    } else {
+      this.isRolling = true;
+      this.firstDie!.start$.next(this.game!.maxValue);
+      if (!this.isSingleSpinner) this.secondDie!.start$.next(this.game!.maxValue);
+      setTimeout(() => { this.isRolling = false; }, 550);
+    }
   }
 }

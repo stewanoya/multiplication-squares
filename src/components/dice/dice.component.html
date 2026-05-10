@@ -1,13 +1,18 @@
 <div *ngIf="firstDie" class="dice-section__container">
 
   <div class="dice-header">
-    <h3 class="dice-title">Spin the Spinner</h3>
-    <button class="mode-toggle" (click)="toggleDiceMode()" type="button" *ngIf="!isSingleSpinner">
+    <h3 class="dice-title">{{ sectionTitle }}</h3>
+    <button class="view-toggle" (click)="toggleViewMode()" type="button">
+      {{ viewMode === 'dice' ? 'Spinner view' : 'Dice view' }}
+    </button>
+    <button class="mode-toggle" (click)="toggleDiceMode()" type="button"
+            *ngIf="viewMode === 'dice' && !isSingleSpinner">
       {{ diceMode === 'number' ? 'Pip view' : 'Number view' }}
     </button>
   </div>
 
-  <div class="dice-row">
+  <!-- Dice view -->
+  <div *ngIf="viewMode === 'dice'" class="dice-row">
     <!-- Die 1 -->
     <ng-container *ngIf="firstDie.rolling$ | async as v1; else emptyDie1">
       <div class="die" [class.die--rolling]="isRolling">
@@ -59,8 +64,28 @@
     </ng-template>
   </div>
 
+  <!-- Spinner view -->
+  <div *ngIf="viewMode === 'spinner'" class="dice-row">
+    <spinner-wheel
+      [maxValue]="game!.maxValue"
+      [targetValue]="spinner1Target"
+      [displayValue]="die1Display">
+    </spinner-wheel>
+    <ng-container *ngIf="isSingleSpinner">
+      <span class="multiply-sign">{{ fixedLabel }}</span>
+    </ng-container>
+    <ng-container *ngIf="!isSingleSpinner">
+      <span class="multiply-sign">{{ dualOperator }}</span>
+      <spinner-wheel
+        [maxValue]="game!.maxValue"
+        [targetValue]="spinner2Target"
+        [displayValue]="die2Raw">
+      </spinner-wheel>
+    </ng-container>
+  </div>
+
   <div class="dice-buttons">
-    <button [disabled]="diceRolled" mat-flat-button color="accent" (click)="onRollClick()">Roll</button>
+    <button [disabled]="diceRolled" mat-flat-button color="accent" (click)="onRollClick()">{{ rollButtonLabel }}</button>
     <button [disabled]="!diceRolled" mat-button (click)="onDrawClick()">Draw it out</button>
     <button [disabled]="!isResultReady" mat-flat-button color="warn" (click)="onSkipTurnClick()">Skip Turn</button>
   </div>

@@ -136,7 +136,7 @@ export class NewGameFormComponent {
   choosePlayerCount(n: number) {
     this.numPlayers = n;
     this.playerGroups = Array.from({ length: n }, () =>
-      this._fb.group({ name: [''], color: [''] })
+      this._fb.group({ name: [this.randomName()], color: [''] })
     );
     this.step = 1;
   }
@@ -146,9 +146,6 @@ export class NewGameFormComponent {
   }
 
   next() {
-    if (this.isPlayerStep && !this.currentGroup.controls['name'].value) {
-      this.currentGroup.controls['name'].setValue(this.randomName());
-    }
     if (this.isTableStep) {
       this.startGame();
     } else {

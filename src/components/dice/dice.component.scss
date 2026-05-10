@@ -24,6 +24,24 @@
   color: #333;
 }
 
+.view-toggle {
+  font-family: 'Fredoka One', sans-serif;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.75rem;
+  border-radius: 2rem;
+  border: 2px solid #e57c23;
+  background: transparent;
+  color: #e57c23;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+
+  &:hover {
+    background: #e57c23;
+    color: white;
+  }
+}
+
 .mode-toggle {
   font-family: 'Fredoka One', sans-serif;
   font-size: 0.8rem;

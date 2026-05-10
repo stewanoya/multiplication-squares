@@ -1,0 +1,23 @@
+<div class="spinner-wrapper">
+  <div class="spinner-pointer">▼</div>
+
+  <!-- Rotating wheel (colors + segment labels) -->
+  <div class="spinner-wheel"
+       [style.transform]="'rotate(' + rotation + 'deg)'"
+       [class.spinner-wheel--animating]="isAnimating">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <g *ngFor="let seg of segments">
+        <path [attr.d]="seg.path" [attr.fill]="seg.color" stroke="white" stroke-width="1.5"/>
+        <text [attr.x]="seg.textX" [attr.y]="seg.textY"
+              text-anchor="middle" dominant-baseline="middle"
+              [attr.transform]="'rotate(' + seg.textRotation + ',' + seg.textX + ',' + seg.textY + ')'"
+              class="segment-label">{{ seg.label }}</text>
+      </g>
+      <!-- White hub covers the center spike of all segments -->
+      <circle cx="100" cy="100" r="22" fill="white"/>
+    </svg>
+  </div>
+
+  <!-- Center result label — static, does not rotate with the wheel -->
+  <div class="spinner-center-label">{{ centerLabel }}</div>
+</div>
