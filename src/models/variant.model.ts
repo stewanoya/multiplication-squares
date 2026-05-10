@@ -111,7 +111,7 @@ export const VARIANTS: Record<VariantId, VariantConfig> = {
   multiplication: {
     id: 'multiplication',
     label: 'Multiplication',
-    gradeRange: 'Grades 3 – 5',
+    gradeRange: 'Grades 3 – 8',
     icon: '×',
     description: 'Spin a number, multiply, and mark a side of that square before someone beats you to it.',
     supportsUpTo12: true,
@@ -141,7 +141,7 @@ export const VARIANTS: Record<VariantId, VariantConfig> = {
   addition: {
     id: 'addition',
     label: 'Addition',
-    gradeRange: 'Grades 1 – 2',
+    gradeRange: 'Grades 1 – 5',
     icon: '+',
     description: 'Add your spin to find the sum. Claim that square before anyone else draws the last side.',
     supportsUpTo12: false,
@@ -155,7 +155,7 @@ export const VARIANTS: Record<VariantId, VariantConfig> = {
   subtraction: {
     id: 'subtraction',
     label: 'Subtraction',
-    gradeRange: 'Grades 1 – 2',
+    gradeRange: 'Grades 1 – 5',
     icon: '−',
     description: 'Spin the starting number and subtract. Hunt for the answer on the board — and pick your square carefully.',
     supportsUpTo12: false,
@@ -169,7 +169,7 @@ export const VARIANTS: Record<VariantId, VariantConfig> = {
   division: {
     id: 'division',
     label: 'Division',
-    gradeRange: 'Grades 3 – 4',
+    gradeRange: 'Grades 3 – 8',
     icon: '÷',
     description: 'Divide the spinner to find your quotient. Find it on the board and draw your line.',
     supportsUpTo12: true,

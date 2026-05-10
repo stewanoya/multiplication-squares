@@ -51,6 +51,7 @@ export class DiceComponent implements OnInit {
   viewMode: ViewMode = (localStorage.getItem('viewMode') as ViewMode) ?? 'dice';
   spinner1Target: number | null = null;
   spinner2Target: number | null = null;
+  spinKey: number = 0;
 
   // raw die values (before any display transform)
   die1Raw: number | null = null;
@@ -91,12 +92,16 @@ export class DiceComponent implements OnInit {
     this.firstDie = new DieModel(max);
 
     if (this.isSingleSpinner) {
+      // rolling$ must be subscribed to activate its tap → value side-effect pipeline
+      this.firstDie.rolling$.subscribe();
       this.firstDie.value.subscribe((v1) => {
         this.die1Raw = v1;
         this.diceValuesEvent.emit([v1]);
       });
     } else {
       this.secondDie = new DieModel(max);
+      this.firstDie.rolling$.subscribe();
+      this.secondDie.rolling$.subscribe();
       this.firstDie.value
         .pipe(combineLatestWith(this.secondDie.value))
         .subscribe(([v1, v2]) => {
@@ -124,8 +129,11 @@ export class DiceComponent implements OnInit {
   toggleViewMode() {
     this.viewMode = this.viewMode === 'dice' ? 'spinner' : 'dice';
     localStorage.setItem('viewMode', this.viewMode);
-    this.spinner1Target = null;
-    this.spinner2Target = null;
+    // Restore spinner display from last rolled values without triggering a new spin
+    if (this.viewMode === 'spinner') {
+      this.spinner1Target = this.die1Raw;
+      this.spinner2Target = this.die2Raw;
+    }
   }
 
   onDrawClick() {
@@ -144,6 +152,7 @@ export class DiceComponent implements OnInit {
       const v2 = this.isSingleSpinner ? null : Math.floor(Math.random() * this.game!.maxValue) + 1;
       this.spinner1Target = v1;
       this.spinner2Target = v2;
+      this.spinKey++; // always increments so ngOnChanges fires even if same value
       setTimeout(() => {
         this.die1Raw = v1;
         this.die2Raw = v2;

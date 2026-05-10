@@ -24,7 +24,7 @@
         <div class="game-card__icon">{{ game.icon }}</div>
         <div class="game-card__body">
           <h3 class="game-card__title">{{ game.label }} Squares</h3>
-          <p class="game-card__grade">{{ game.gradeRange }}</p>
+          <p class="game-card__grade" *ngIf="game.gradeRange">{{ game.gradeRange }}</p>
           <p class="game-card__desc">Coming soon!</p>
         </div>
         <div class="game-card__actions">

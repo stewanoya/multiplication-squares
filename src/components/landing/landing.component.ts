@@ -8,7 +8,7 @@ import { VARIANT_LIST, VariantConfig } from '../../models/variant.model';
 interface ComingSoonGame {
   label: string;
   icon: string;
-  gradeRange: string;
+  gradeRange?: string;
   comingSoon: true;
 }
 
@@ -23,9 +23,9 @@ export class LandingComponent implements OnInit {
   activeGames: VariantConfig[] = VARIANT_LIST;
 
   comingSoonGames: ComingSoonGame[] = [
-    { label: 'Factors', icon: 'f', gradeRange: 'Grade 4', comingSoon: true },
-    { label: 'Multiples', icon: 'm', gradeRange: 'Grade 4', comingSoon: true },
-    { label: 'Prime & Composite', icon: 'p', gradeRange: 'Grade 4', comingSoon: true },
+    { label: 'Factors', icon: 'f', comingSoon: true },
+    { label: 'Multiples', icon: 'm', comingSoon: true },
+    { label: 'Prime & Composite', icon: 'p', comingSoon: true },
   ];
 
   constructor(private _router: Router, private seo: SeoService) {}

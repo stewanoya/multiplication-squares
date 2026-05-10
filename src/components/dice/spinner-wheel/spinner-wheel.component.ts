@@ -23,6 +23,7 @@ export class SpinnerWheelComponent implements OnChanges {
   @Input() maxValue: number = 6;
   @Input() targetValue: number | null = null;
   @Input() displayValue: number | null = null;
+  @Input() spinKey: number = 0;
 
   rotation = 0;
   isAnimating = false;
@@ -35,7 +36,8 @@ export class SpinnerWheelComponent implements OnChanges {
       this.lastMaxValue = this.maxValue;
       this.buildSegments();
     }
-    if (changes['targetValue'] && this.targetValue !== null) {
+    // spinKey increments on every roll — fires spin even when targetValue is unchanged
+    if (changes['spinKey'] && !changes['spinKey'].firstChange && this.targetValue !== null) {
       this.spin(this.targetValue);
     }
   }

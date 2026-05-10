@@ -14,13 +14,13 @@
   <!-- Dice view -->
   <div *ngIf="viewMode === 'dice'" class="dice-row">
     <!-- Die 1 -->
-    <ng-container *ngIf="firstDie.rolling$ | async as v1; else emptyDie1">
+    <ng-container *ngIf="die1Raw !== null; else emptyDie1">
       <div class="die" [class.die--rolling]="isRolling">
-        <span *ngIf="diceMode === 'number' || isSingleSpinner" class="die-number">{{ die1Display ?? v1 }}</span>
+        <span *ngIf="diceMode === 'number' || isSingleSpinner" class="die-number">{{ die1Display }}</span>
         <div *ngIf="diceMode === 'pip' && !isSingleSpinner"
              class="pip-grid"
-             [style.grid-template-rows]="'repeat(' + pipGridRows(v1) + ', 1fr)'">
-          <span *ngFor="let pip of getPipPositions(v1)"
+             [style.grid-template-rows]="'repeat(' + pipGridRows(die1Raw) + ', 1fr)'">
+          <span *ngFor="let pip of getPipPositions(die1Raw)"
                 class="pip"
                 [style.grid-row]="pip.r"
                 [style.grid-column]="pip.c">
@@ -42,13 +42,13 @@
     <ng-template #dualDie>
       <span class="multiply-sign">{{ dualOperator }}</span>
 
-      <ng-container *ngIf="secondDie && (secondDie.rolling$ | async) as v2; else emptyDie2">
+      <ng-container *ngIf="die2Raw !== null; else emptyDie2">
         <div class="die" [class.die--rolling]="isRolling">
-          <span *ngIf="diceMode === 'number'" class="die-number">{{ v2 }}</span>
+          <span *ngIf="diceMode === 'number'" class="die-number">{{ die2Raw }}</span>
           <div *ngIf="diceMode === 'pip'"
                class="pip-grid"
-               [style.grid-template-rows]="'repeat(' + pipGridRows(v2) + ', 1fr)'">
-            <span *ngFor="let pip of getPipPositions(v2)"
+               [style.grid-template-rows]="'repeat(' + pipGridRows(die2Raw) + ', 1fr)'">
+            <span *ngFor="let pip of getPipPositions(die2Raw)"
                   class="pip"
                   [style.grid-row]="pip.r"
                   [style.grid-column]="pip.c">
@@ -69,6 +69,7 @@
     <spinner-wheel
       [maxValue]="game!.maxValue"
       [targetValue]="spinner1Target"
+      [spinKey]="spinKey"
       [displayValue]="die1Display">
     </spinner-wheel>
     <ng-container *ngIf="isSingleSpinner">
@@ -79,6 +80,7 @@
       <spinner-wheel
         [maxValue]="game!.maxValue"
         [targetValue]="spinner2Target"
+        [spinKey]="spinKey"
         [displayValue]="die2Raw">
       </spinner-wheel>
     </ng-container>
