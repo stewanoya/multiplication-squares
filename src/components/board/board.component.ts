@@ -107,8 +107,10 @@ export class BoardComponent implements OnInit {
       if (gameSettings && !isDevMode()) {
         const adRef = this._dialog.open(AdInterstitialComponent, {
           disableClose: true,
-          width: '640px',
-          maxWidth: '95vw',
+          width: '100vw',
+          height: '100vh',
+          maxWidth: '100vw',
+          maxHeight: '100vh',
         });
         adRef.afterClosed().subscribe(() => {
           this.game = new BoardModel(gameSettings.difficulty, gameSettings.players);

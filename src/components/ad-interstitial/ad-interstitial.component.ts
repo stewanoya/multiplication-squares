@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, isDevMode, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, isDevMode, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ export class AdInterstitialComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('adSlot') adSlot!: ElementRef<HTMLElement>;
 
-  constructor(private _dialogRef: MatDialogRef<AdInterstitialComponent>) {}
+  constructor(private _dialogRef: MatDialogRef<AdInterstitialComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngAfterViewInit() {
     if (!isDevMode()) {

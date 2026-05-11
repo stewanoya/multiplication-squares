@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { SeoService } from '../../services/seo.service';
 import { DifficultyLevel, getVariant, VARIANT_LIST, VariantConfig } from '../../models/variant.model';
+import { MatDialog } from '@angular/material/dialog';
+import { AdInterstitialComponent } from '../ad-interstitial/ad-interstitial.component';
 
 interface GridCell {
   type: 'dot' | 'h-line' | 'v-line' | 'number';
@@ -33,6 +35,7 @@ export class PrintableComponent implements OnInit {
 
   constructor(
     private seo: SeoService,
+    private _dialog: MatDialog,
     private _route: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
@@ -163,8 +166,21 @@ export class PrintableComponent implements OnInit {
   }
 
   print() {
-    if (isPlatformBrowser(this.platformId)) {
-      window.print();
-    }
+    const adRef = this._dialog.open(AdInterstitialComponent, {
+      disableClose: true,
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      data: {
+        messageOverride: "Print board",
+      }
+    });
+    adRef.afterClosed().subscribe(() => {
+      if (isPlatformBrowser(this.platformId)) {
+        window.print();
+      }
+    });
+
   }
 }
