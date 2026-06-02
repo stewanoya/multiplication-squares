@@ -111,6 +111,7 @@ export class BoardComponent implements OnInit {
           height: '100vh',
           maxWidth: '100vw',
           maxHeight: '100vh',
+          data: {},
         });
         adRef.afterClosed().subscribe(() => {
           this.game = new BoardModel(gameSettings.difficulty, gameSettings.players);
